@@ -1,0 +1,36 @@
+Skriv redovisningstext på din me-sida. Skriv ett stycke (minst 15 meningar) om kursmomentet.
+ Reflektera över:
+* svårigheter
+    
+* problem
+  Javascriptet, Fungerade när jag först gjorde den. Någonting gick fel när jag lade till den i Me sidan, Felsökte i någon timme och 
+sedan hittde jag felet den laddade aldrig in Scriptet för java. 
+* lösningar
+  
+* erfarenheter
+ -> Php från HTMLPhp 
+
+* lärdomar
+Php shorttags, Templatesida, Sidkontroller, .htaccess, sitemaps, robots.txt
+Javascript slideshow, Moduler, Meny med undermeny
+
+* resultatet, etc.
+
+Se till att följande frågor besvaras i texten:
+
+* Vilken utvecklingsmiljö använder du?
+JEdit, Filezilla, Firefox, 
+* Berätta hur det gick att jobba igenom guiden “20 steg för att komma igång PHP”, var något nytt eller kan du det?
+Det gick ganska fort att se över guiden, jag gjorde den i föregående kurs. fräschade bara upp minnet
+
+* Vad döpte du din webbmall Anax till?
+Pageburn heter min webbmall
+* Vad anser du om strukturen i Anax, gjorde du några egna förbättringar eller något du hoppade över?
+Jag tycker att strukturen är riktigt bra, den ger även god möjlighet för utbyggnad allt efter som man lär sig nya saker. 
+Återanvändbarheten är bra för man då slipper skapa en ny uppbyggnad för varje enskild sida. 
+Jag har inte ännu gjort några förbättringar. 
+
+* Gick det bra att inkludera source.php? Gjorde du det som en modul i ditt Anax?
+Jag kände att eftersom jag ville lära mig något nytt så gjore jag det som en modul i anax
+* Gjorde du extrauppgiften med GitHub?
+Nej jag sparar den till ett senare tillfällle

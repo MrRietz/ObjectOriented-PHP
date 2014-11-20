@@ -1,0 +1,102 @@
+/** 
+My Main Stylesheet
+*/
+@import url(links.css);
+
+
+/**
+ * General elements
+ */
+body {
+  color: #333;
+  font-family: arial, sans-serif;
+}
+ 
+/**
+ * Layout of the main page elements 
+ */
+#wrapper {
+  margin: 0 auto;
+  width: 980px; 
+  padding: 10px;
+}
+ 
+ 
+/**
+ * Layout for header
+ */
+#header {
+  position: relative;
+  margin-bottom: 40px;
+}
+ 
+.sitetitle {
+  position: absolute;
+  top: 6px;
+  left: 130px;
+  font-size: 48px;
+}
+ 
+.siteslogan {
+  position: absolute;
+  top: 65px;
+  left: 130px;
+  font-style: italic;
+  color: #666;
+}
+ /** 
+ Layout for navbar
+ */ 
+#navbar {
+  margin-bottom: 2em;
+}
+
+
+/**
+ * Layout for main
+ */
+#main {
+  min-height: 20em;
+}
+ 
+ 
+/**
+ * Layout for footer
+ */
+#footer {
+  margin-top: 40px;
+  border-top: 1px solid #ccc;
+  padding-top: 15px;
+}
+ 
+.sitefooter {
+  color: #666;
+}
+
+
+
+/**
+ * CSS sprite for a dice with six faces.
+ *
+ */
+ul.dice {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+ 
+ul.dice li {
+  display: inline-block;
+  padding: 0;
+  margin: 0 4px 0 0;
+  width: 32px;
+  height: 32px;
+  background: url("../img/dice_faces.jpg") no-repeat;
+}
+ 
+ul.dice li.dice-1 { background-position: -160px 0px; }
+ul.dice li.dice-2 { background-position: -128px 0px; }
+ul.dice li.dice-3 { background-position:  -96px 0px; }
+ul.dice li.dice-4 { background-position:  -64px 0px; }
+ul.dice li.dice-5 { background-position:  -32px 0px; }
+ul.dice li.dice-6 { background-position:    0px 0px; }

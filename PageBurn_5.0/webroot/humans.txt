@@ -1,0 +1,4 @@
+Jag som har gjort sidan heter Robin Rietz och jag använder mig av strukturen Anax för att bygga upp sidan. 
+
+Lite fakta om Anax:
+Anax is a PHP-boilerplate/framework for small websites. Anax was built by Mikael Roos (me@mikaelroos.se) as part of teaching web programming and published in june 2013 as an article at http://dbwebb.se/kunskap (swedish). It was also published at GitHub: https://github.com/mosbth/Anax-base.

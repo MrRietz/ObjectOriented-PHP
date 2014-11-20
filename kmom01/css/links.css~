@@ -1,0 +1,54 @@
+
+/** --------------------------------------------------------------
+ * Navbar: Skype style, 
+ *
+ */
+ul.nb-skype
+{
+	  list-style-type: none;
+	  padding: 0;
+	  margin: 0;
+	  background:#E5F7FD;
+	  border-bottom:1px solid #7FD7F7;
+	  padding:7px;
+}
+
+ul.nb-skype li {
+	  padding: 0 0 0 1em;
+	  margin: 0;
+	  display: inline;
+}
+
+ul.nb-skype li:first-child {
+	padding-left: 0;
+}
+
+ul.nb-skype li.selected a 
+{
+	  color:#FFFFFF;background:#7FD7F7;
+	 -webkit-border-top-left-radius: 5px;
+	 -webkit-border-top-right-radius: 5px;
+	 -moz-border-radius-topleft: 5px;
+	 -moz-border-radius-topright: 5px;
+	 border-top-left-radius: 5px;
+	 border-top-right-radius: 5px;
+}    
+
+ul.nb-skype a 
+{
+	  color:#636363;
+	  font:bold 16px Helvetica,Arial,sans-serif;
+	  padding:8px;
+	  text-decoration:none;
+}  
+
+ul.nb-skype a:hover 
+{
+	 color:#FFFFFF;background:#7FD7F7;
+	 -webkit-border-top-left-radius: 5px;
+	 -webkit-border-top-right-radius: 5px;
+	 -moz-border-radius-topleft: 5px;
+	 -moz-border-radius-topright: 5px;
+	 border-top-left-radius: 5px;
+	 border-top-right-radius: 5px;
+}

@@ -24,9 +24,9 @@
 	    <div id='content'>
 	    	<div id='main'><?=$main?></div>
 	    </div>
-    <?php if(isset($navbar)): ?>
-    <aside id='sidebar'><?= $sidebarTitle ?><br><?=get_navbar($sidebar)?></aside>
-    <?php endif; ?>
+    <?php if(isset($sidebar)): ?>
+    <aside id='sidebar'>//<?= $sidebarTitle ?><br><?=get_navbar($sidebar)?></aside>
+    //<?php endif; ?>
     <div id='footer'><?=$footer?></div>
   </div>
 <?php if(isset($jquery)):?><script src='<?=$jquery?>'></script><?php endif; ?>

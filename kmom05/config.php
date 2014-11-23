@@ -96,7 +96,6 @@ $pageburn['navbar'] = array(
                 ),
             ),
         ),
-<<<<<<< HEAD
         'blog' => array('text' =>  'Blogg', 'url' =>        'viewController.php', 'title' => 'Vy som visar innehållet',
             //lets add the submenu here
                 'submenu' => array(
@@ -109,9 +108,6 @@ $pageburn['navbar'] = array(
                     ),
                 ),
         ),
-=======
-        'view' => array('text' =>  'Blogg', 'url' =>        'viewController.php', 'title' => 'Vy som visar innehållet'),
->>>>>>> kmom05Server
         'login' => array('text' =>  'Login', 'url' =>        'loginController.php', 'title' => 'Logga in för att ändra i databasen'),
         'logout' => array('text' => 'Logout', 'url' =>       'logoutController.php', 'title' => 'Logga ut'),
         'kallkod' => array('text' =>'Källkod', 'url' =>      'source.php', 'title' => 'Se källkoden'),

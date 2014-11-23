@@ -12,13 +12,13 @@ $db = new CDatabase($pageburn['database']);
 $content = new CContent($db); 
 
 // Prepare content and store it all in variables in the Anax container.
-$pageburn['title'] = "Uppdatera innehåll";
+$pageburn['title'] = "Ta bort innehåll";
 $pageburn['debug'] = $db->Dump();
 
 $pageburn['main'] = <<<EOD
 <h1>{$pageburn['title']}</h1>
 
-{$content->renderEditForm($content->updateContent())}
+{$content->renderRemoveForm($content->updateContent())}
 
 EOD;
 

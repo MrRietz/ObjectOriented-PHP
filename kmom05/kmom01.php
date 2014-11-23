@@ -6,7 +6,6 @@
 // Include the essential config-file which also creates the $pageburn variable with its defaults.
 include(__DIR__.'/config.php'); 
 
-if(isset($p)) echo "id='".strip_tags($p)."'"; 
 // Do it and store it all in variables in the Anax container.
 $pageburn['title'] = "Redovisning Kmom01";
 

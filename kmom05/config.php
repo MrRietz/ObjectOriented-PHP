@@ -68,9 +68,12 @@ EOD;
 
 /** Settings for database
  * ********************************************************************** */
-$pageburn['database']['dsn'] = 'mysql:host=localhost;dbname=Kmom05;';
-$pageburn['database']['username'] = 'root';
-$pageburn['database']['password'] = '';
+define('DB_USER', 'rorb09'); // The database username
+define('DB_PASSWORD', 'UZ"D7Vw/'); // The database password
+
+$pageburn['database']['dsn'] = 'mysql:host=blu-ray.student.bth.se;dbname=rorb09;';
+$pageburn['database']['username'] = DB_USER;
+$pageburn['database']['password'] = DB_PASSWORD;
 $pageburn['database']['driver_options'] = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'");
 
 
@@ -93,7 +96,7 @@ $pageburn['navbar'] = array(
                 ),
             ),
         ),
-        'view' => array('text' =>  'Innehåll', 'url' =>        'viewController.php', 'title' => 'Vy som visar innehållet'),
+        'view' => array('text' =>  'Blogg', 'url' =>        'viewController.php', 'title' => 'Vy som visar innehållet'),
         'login' => array('text' =>  'Login', 'url' =>        'loginController.php', 'title' => 'Logga in för att ändra i databasen'),
         'logout' => array('text' => 'Logout', 'url' =>       'logoutController.php', 'title' => 'Logga ut'),
         'kallkod' => array('text' =>'Källkod', 'url' =>      'source.php', 'title' => 'Se källkoden'),

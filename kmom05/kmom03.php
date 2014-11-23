@@ -1,4 +1,4 @@
- <?php 
+<?php 
 /**
  * This is a Pageburn pagecontroller.
  *

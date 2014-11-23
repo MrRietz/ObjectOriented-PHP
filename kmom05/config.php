@@ -25,8 +25,11 @@ include(PAGEBURN_INSTALL_PATH . '/src/bootstrap.php');
  * Start the session.
  *
  */
+
 session_name(preg_replace('/[:\.\/-_]/', '', __DIR__));
+ if(session_id() == '') {
 session_start();
+ }
 
 
 /** Create the Pageburn variable. 

@@ -37,7 +37,7 @@ $pageburn['main'] = <<<EOD
   <fieldset>
   <legend>Login</legend>
   <p><input type='submit' name='logout' value='Logout'/></p>
-  <p><a href='movie_login.php'>Login</a></p>
+  <p><a href='loginController.php'>Login</a></p>
   <output><b>{$output}</b></output>
   </fieldset>
 </form>

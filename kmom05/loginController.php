@@ -38,7 +38,7 @@ $pageburn['main'] = <<<EOD
 	<p><label>Användare:<br/><input type='text' name='acronym' value=''/></label></p>
 	<p><label>Lösenord:<br/><input type='text' name='password' value=''/></label></p>
 	<p><input type='submit' name='login' value='Login'/></p>
-	<p><a href='movie_logout.php'>Logout</a></p>
+	<p><a href='logoutController.php'>Logout</a></p>
 	<output><b>{$output}</b></output>
 </fieldset>
 </form>

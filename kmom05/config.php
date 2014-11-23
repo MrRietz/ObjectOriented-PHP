@@ -93,7 +93,18 @@ $pageburn['navbar'] = array(
                 ),
             ),
         ),
-        'view' => array('text' =>  'Innehåll', 'url' =>        'viewController.php', 'title' => 'Vy som visar innehållet'),
+        'blog' => array('text' =>  'Blogg', 'url' =>        'viewController.php', 'title' => 'Vy som visar innehållet',
+            //lets add the submenu here
+                'submenu' => array(
+                    //this menu item is part of the submenu
+                    'items' => array(
+                        'item 1' => array('text' => 'Reset', 'url' => 'resetDBController.php', 'title' => 'Reset DB'),
+                        /*'item 2' => array('text' => 'Kmom02', 'url' => 'kmom02.php', 'title' => 'Kmom02'),
+                        'item 3' => array('text' => 'Kmom03', 'url' => 'kmom03.php', 'title' => 'Kmom03'),
+                        'item 4' => array('text' => 'Kmom04', 'url' => 'kmom04.php', 'title' => 'Kmom04'),*/
+                    ),
+                ),
+        ),
         'login' => array('text' =>  'Login', 'url' =>        'loginController.php', 'title' => 'Logga in för att ändra i databasen'),
         'logout' => array('text' => 'Logout', 'url' =>       'logoutController.php', 'title' => 'Logga ut'),
         'kallkod' => array('text' =>'Källkod', 'url' =>      'source.php', 'title' => 'Se källkoden'),

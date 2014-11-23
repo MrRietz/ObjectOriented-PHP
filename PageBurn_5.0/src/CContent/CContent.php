@@ -2,20 +2,20 @@
 
 class CContent {
 
-    private $db;
-    private $isAdmin    = null;
-    private $id         = null; 
-    private $title      = null; 
-    private $slug       = null; 
-    private $url        = null; 
-    private $data       = null; 
-    private $type       = null; 
-    private $filter     = null; 
-    private $published  = null; 
-    
-    private $save       = null; 
-    private $remove     = null; 
-    private $noRemove   = null; 
+    protected $db;
+    protected $isAdmin    = null;
+    protected $id         = null; 
+    protected $title      = null; 
+    protected $slug       = null; 
+    protected $url        = null; 
+    protected $data       = null; 
+    protected $type       = null; 
+    protected $filter     = null; 
+    protected $published  = null; 
+
+    protected $save       = null; 
+    protected $remove     = null; 
+    protected $noRemove   = null; 
     public function __construct($database) {
         
         $this->db =         $database;
@@ -199,7 +199,8 @@ class CContent {
         }
     }
     
-    private function sanitizeVariables($c) {
+    public function sanitizeVariables($c) {
+        
         $this->title      = htmlentities($c->title, null, 'UTF-8');
         $this->slug       = htmlentities($c->slug, null, 'UTF-8');
         $this->url        = htmlentities($c->url, null, 'UTF-8');

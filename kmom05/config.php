@@ -92,6 +92,7 @@ $pageburn['navbar'] = array(
                     'item 2' => array('text' => 'Kmom02', 'url' => 'kmom02.php', 'title' => 'Kmom02'),
                     'item 3' => array('text' => 'Kmom03', 'url' => 'kmom03.php', 'title' => 'Kmom03'),
                     'item 4' => array('text' => 'Kmom04', 'url' => 'kmom04.php', 'title' => 'Kmom04'),
+                    'item 5' => array('text' => 'Kmom05', 'url' => 'kmom05.php', 'title' => 'Kmom05'),
                 ),
             ),
         ),

@@ -12,7 +12,7 @@ $pageburn['title'] = "Redovisning Kmom05";
 $pageburn['main'] = <<<EOD
 <h1> {$pageburn['title']} </h1>
 <p>
-Innan jag började med detta kursmomentet så satte jag upp SmartGIT mot mitt github repository. Jag skapade en branch som hette kmom05 baserat på min master-branch som innehöll allt från föregående uppgift. Här är en länk till min github: https://github.com/MrRietz/ObjectOriented-PHP . Jag hade lite problem med uppladdningen på studentservern. Men det var lite olika faktorer, delvis inställningar i config filen och sedan att jag råkade ladda upp sånt som var från en gammal branch. 
+Innan jag började med detta kursmomentet så satte jag upp SmartGIT mot mitt github repository. Jag skapade en branch som hette kmom05 baserat på min master-branch som innehöll allt från föregående uppgift. Här är en länk till min github: https://github.com/MrRietz/ObjectOriented-PHP . Jag hade lite problem med uppladdningen på studentservern. Men det var lite olika faktorer, delvis inställningar i config filen och sedan att jag råkade ladda upp sånt som var från en gammal branch. Jag har även bytt editor till netbeans, för jag tycker den har ett bättre och mer användbart interface.
 </p><p>
 Modulerna är användbara och skapar en säkrare och bättre struktur för sidan. Jag tycker att de mest återanvändbara modulerna är Cdatabase och Cuser hittils. Jag har bra koll på det objektorienterade tänket sedan länge, och jag tycker om att kunna utföra det med hjälp av PHP på ett smidigt sätt. Det finns till exempel läge för utbyggnad med modul för bildhantering eller andra spel än tärningsspelet. 
 </p>

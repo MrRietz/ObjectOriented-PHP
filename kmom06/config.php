@@ -96,11 +96,12 @@ $pageburn['navbar'] = array(
                     'item 3' => array('text' => 'Kmom03', 'url' => 'kmom03.php', 'title' => 'Kmom03'),
                     'item 4' => array('text' => 'Kmom04', 'url' => 'kmom04.php', 'title' => 'Kmom04'),
                     'item 5' => array('text' => 'Kmom05', 'url' => 'kmom05.php', 'title' => 'Kmom05'),
+                    'item 6' => array('text' => 'Kmom06', 'url' => 'kmom06.php', 'title' => 'Kmom06'),
                 ),
             ),
         ),
-        'Image' => array('text' => 'Gallery', 'url' => 'gallery.php', 'title' => 'Gallery'),
-        
+        'Gallery' => array('text' => 'Gallery', 'url' => 'gallery.php', 'title' => 'Gallery'),
+        'Image' => array('text' => 'ImgTest', 'url' => 'img_test.php', 'title' => 'Image Test'),
 //        'blog' => array('text' =>  'Blogg', 'url' =>        'viewController.php', 'title' => 'Vy som visar innehållet',
 //            //lets add the submenu here
 //                'submenu' => array(

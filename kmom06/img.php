@@ -20,7 +20,5 @@ ini_set('output_buffering', 0);   // Do not buffer outputs, write directly
 define('IMG_PATH', __DIR__ . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR);
 define('CACHE_PATH', __DIR__ . '/cache/');
 
-
-$src        = isset($_GET['src'])     ? $_GET['src']      : null;
-$image = new CImage($src); 
+$image = new CImage(); 
 $image->renderImage(); 

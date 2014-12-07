@@ -3,46 +3,46 @@
 class CImage {
 
     private $html = null;
+    private $maxWidth = null;
+    private $src = null;
+    private $width = null;
+    private $height = null;
+    private $cropWidth = null;
+    private $cropHeight = null;
+    private $type = null;
+    private $attr = null;
+    private $verbose = null;
+    private $saveAs = null;
+    private $quality = null;
+    private $ignoreCache = null;
+    private $newWidth = null;
+    private $newHeight = null;
+    private $cropToFit = null;
+    private $pathToImage = null;
+    private $fileExtension = null;
+    private $image = null;
+    private $cacheFileName = null;
+    private $sharpen = null;
+    private $filesize = null;
 
-    private $maxWidth    = null; 
-    private $src         = null; 
-    private $width       = null; 
-    private $height      = null; 
-    private $cropWidth   = null; 
-    private $cropHeight  = null; 
-    private $type        = null; 
-    private $attr        = null; 
-    private $verbose     = null; 
-    private $saveAs      = null; 
-    private $quality     = null; 
-    private $ignoreCache = null; 
-    private $newWidth    = null; 
-    private $newHeight   = null; 
-    private $cropToFit   = null;   
-    private $pathToImage = null; 
-    private $fileExtension = null; 
-    private $image         = null; 
-    private $cacheFileName = null; 
-    private $sharpen       = null; 
-    private $filesize      = null;
-    
-    public function __construct($src) {
-        
+    public function __construct() {
+
         $this->maxWidth = $this->maxHeight = 2000;
 
-        $this->src            = $src; 
-        $this->verbose        = isset($_GET['verbose'])   ? true : null;
-        $this->saveAs         = isset($_GET['save-as'])   ? $_GET['save-as'] : null;
-        $this->quality        = isset($_GET['quality'])   ? $_GET['quality'] : 60;
-        $this->ignoreCache    = isset($_GET['no-cache'])    ? true : null;    
-        $this->newWidth       = isset($_GET['width'])       ? $_GET['width'] : null;
-        $this->newHeight      = isset($_GET['height'])      ? $_GET['height'] : null;
-        $this->cropToFit      = isset($_GET['crop-to-fit']) ? true : null;
-        $this->sharpen        = isset($_GET['sharpen']) ? true : null;
-        $this->pathToImage    = realpath(IMG_PATH . $this->src);
-    
-        $this->validateArgs(); 
+        $this->src = isset($_GET['src'])     ? $_GET['src']      : null;
+        $this->verbose = isset($_GET['verbose']) ? true : null;
+        $this->saveAs = isset($_GET['save-as']) ? $_GET['save-as'] : null;
+        $this->quality = isset($_GET['quality']) ? $_GET['quality'] : 60;
+        $this->ignoreCache = isset($_GET['no-cache']) ? true : null;
+        $this->newWidth = isset($_GET['width']) ? $_GET['width'] : null;
+        $this->newHeight = isset($_GET['height']) ? $_GET['height'] : null;
+        $this->cropToFit = isset($_GET['crop-to-fit']) ? true : null;
+        $this->sharpen = isset($_GET['sharpen']) ? true : null;
+        $this->pathToImage = realpath(IMG_PATH . $this->src);
+
+        $this->validateArgs();
     }
+
     // <editor-fold defaultstate="collapsed" desc="Getters and setters">
     function getHtml() {
         return $this->html;
@@ -212,7 +212,6 @@ class CImage {
         $this->sharpen = $sharpen;
     }
 
-    
     // </editor-fold>
 
     public function renderImage() {
@@ -244,13 +243,13 @@ class CImage {
     }
 
     private function validateArgs() {
-        
+
         is_dir(IMG_PATH) or $this->errorMessage('The image dir is not a valid directory.');
         is_writable(CACHE_PATH) or $this->errorMessage('The cache dir is not a writable directory.');
         isset($this->src) or $this->errorMessage('Must set src-attribute.');
-        preg_match('#^[a-z0-9A-Z-_\.\/]+$#', $this->src) or $this->errorMessage('Filename contains invalid characters.');    
+       // preg_match('#^[a-z0-9A-Z-_\.\/]+$#', $this->src) or $this->errorMessage('Filename contains invalid characters.');
         substr_compare(IMG_PATH, $this->pathToImage, 0, strlen(IMG_PATH)) == 0 or $this->errorMessage('Security constraint: Source image is not directly below the directory IMG_PATH.');
-        
+
         is_null($this->saveAs) or in_array($this->saveAs, array('png', 'jpg', 'jpeg')) or $this->errorMessage('Not a valid extension to save image as');
         is_null($this->quality) or ( is_numeric($this->quality) and $this->quality > 0 and $this->quality <= 100) or $this->errorMessage('Quality out of range');
         is_null($this->newWidth) or ( is_numeric($this->newWidth) and $this->newWidth > 0 and $this->newWidth <= $this->maxWidth) or $this->errorMessage('Width out of range');
@@ -266,7 +265,7 @@ class CImage {
         $quality_ = is_null($this->quality) ? null : "_q{$this->quality}";
         $cropToFit_ = is_null($this->cropToFit) ? null : "_cf";
         $dirName = preg_replace('/\//', '-', dirname($this->src));
-        $sharpen_       = is_null($this->sharpen) ? null : "_s";
+        $sharpen_ = is_null($this->sharpen) ? null : "_s";
         $this->cacheFileName = CACHE_PATH . "-{$dirName}-{$parts['filename']}_{$this->newWidth}_{$this->newHeight}{$quality_}{$cropToFit_}{$sharpen_}.{$this->saveAs}";
         $this->cacheFileName = preg_replace('/^a-zA-Z0-9\.-_/', '', $this->cacheFileName);
 
@@ -314,9 +313,9 @@ class CImage {
         }
         exit;
     }
-    
+
     private function saveImage() {
-        
+
         switch ($this->saveAs) {
             case 'jpeg':
             case 'jpg':
@@ -334,8 +333,8 @@ class CImage {
             default:
                 $this->errorMessage('No support to save as this file extension.');
                 break;
-        } 
-        
+        }
+
         if ($this->verbose) {
             clearstatcache();
             $cacheFilesize = filesize($this->cacheFileName);
@@ -343,9 +342,9 @@ class CImage {
             $this->verbose("Cache file has a file size of " . round($cacheFilesize / $this->filesize * 100) . "% of the original size.");
         }
     }
-    
+
     private function getImgInfo() {
-        
+
         $imgInfo = list($this->width, $this->height, $this->type, $this->attr) = getimagesize($this->pathToImage);
         !empty($imgInfo) or $this->errorMessage("The file doesn't seem to be an image.");
         $mime = $imgInfo['mime'];
@@ -354,20 +353,20 @@ class CImage {
             $this->filesize = filesize($this->pathToImage);
             $this->verbose("Image file: {$this->pathToImage}");
             $this->verbose("Image information: " . print_r($imgInfo, true));
-            $this->verbose("Image width x height (type): {$width} x {$height} ({$type}).");
-            $this->verbose("Image file size: {$filesize} bytes.");
+            $this->verbose("Image width x height (type): {$this->width} x {$this->height} ({$this->type}).");
+            $this->verbose("Image file size: {$this->filesize} bytes.");
             $this->verbose("Image mime type: {$mime}.");
         }
     }
 
     private function calculateWidthAndHeight() {
-        
+
         $aspectRatio = $this->width / $this->height;
 
         if ($this->cropToFit && $this->newWidth && $this->newHeight) {
             $targetRatio = $this->newWidth / $this->newHeight;
-            $$this->cropWidth = $targetRatio > $aspectRatio ? $this->width : round($this->height * $targetRatio);
-            $$this->cropHeight = $targetRatio > $aspectRatio ? round($this->width / $targetRatio) : $this->height;
+            $this->cropWidth = $targetRatio > $aspectRatio ? $this->width : round($this->height * $targetRatio);
+            $this->cropHeight = $targetRatio > $aspectRatio ? round($this->width / $targetRatio) : $this->height;
             if ($this->verbose) {
                 $this->verbose("Crop to fit into box of {$this->newWidth}x{$this->newHeight}. Cropping dimensions: {$this->cropWidth}x{$this->cropHeight}.");
             }
@@ -377,7 +376,7 @@ class CImage {
                 $this->verbose("New width is known {$this->newWidth}, height is calculated to {$this->newHeight}.");
             }
         } else if (!$this->newWidth && $this->newHeight) {
-            $newWidth = round($this->newHeight * $aspectRatio);
+            $this->newWidth = round($this->newHeight * $aspectRatio);
             if ($this->verbose) {
                 $this->verbose("New height is known {$this->newHeight}, width is calculated to {$this->newWidth}.");
             }
@@ -398,9 +397,9 @@ class CImage {
             }
         }
     }
-    
+
     private function openOriginalFromFile() {
-        
+
         // Open up the original image from file
         if ($this->verbose) {
             $this->verbose("File extension is: {$this->fileExtension}");
@@ -410,7 +409,7 @@ class CImage {
             case 'jpg':
             case 'jpeg':
                 $this->image = imagecreatefromjpeg($this->pathToImage);
-                if ($verbose) {
+                if ($this->verbose) {
                     $this->verbose("Opened the image as a JPEG image.");
                 }
                 break;
@@ -425,7 +424,7 @@ class CImage {
             default: errorPage('No support for this file extension.');
         }
     }
-    
+
     /**
      * Sharpen image as http://php.net/manual/en/ref.image.php#56144
      * http://loriweb.pair.com/8udf-sharpen.html
@@ -445,7 +444,7 @@ class CImage {
     }
 
     private function resizeImage() {
-        
+
         if ($this->cropToFit) {
             if ($this->verbose) {
                 $this->verbose("Resizing, crop to fit.");
@@ -458,7 +457,8 @@ class CImage {
             $this->width = $this->newWidth;
             $this->height = $this->newHeight;
         } else if (!($this->newWidth == $this->width && $this->newHeight == $this->height)) {
-            if ($verbose) {
+            
+            if ($this->verbose) {
                 $this->verbose("Resizing, new height and/or width.");
             }
             $imageResized = imagecreatetruecolor($this->newWidth, $this->newHeight);
@@ -489,22 +489,22 @@ class CImage {
     }
 
     /** Display error message. 
-    *
-    */
+     *
+     */
     private function errorMessage($message) {
         header("Status: 404 Not Found");
         die('img.php says 404 - ' . htmlentities($message));
     }
 
     /** Display log message. 
-    *
-    */
+     *
+     */
     private function verbose($message) {
         echo "<p>" . htmlentities($message) . "</p>";
     }
-    
+
     private function displayLog() {
-        
+
         $query = array();
         parse_str($_SERVER['QUERY_STRING'], $query);
         unset($query['verbose']);

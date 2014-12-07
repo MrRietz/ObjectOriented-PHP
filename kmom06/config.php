@@ -48,7 +48,7 @@ $pageburn['header'] = <<<EOD
 EOD;
 
 $pageburn['footer'] = <<<EOD
-<footer><span class='sitefooter'>Copyright (c) Mikael Roos (me@mikaelroos.se) | <a href='http://validator.w3.org/unicorn/check?ucn_uri=referer&amp;ucn_task=conformance'>Unicorn</a></span></footer>
+<footer><span class='sitefooter'>Copyright (c) Robin Rietz | <a href='https://github.com/MrRietz/ObjectOriented-PHP/tree/master/PageBurn_5.0'>Pageburn på GitHub</a> | <a href='http://validator.w3.org/unicorn/check?ucn_uri=referer&amp;ucn_task=conformance'>Unicorn</a></span></footer>
 EOD;
 
 
@@ -99,20 +99,22 @@ $pageburn['navbar'] = array(
                 ),
             ),
         ),
-        'blog' => array('text' =>  'Blogg', 'url' =>        'viewController.php', 'title' => 'Vy som visar innehållet',
-            //lets add the submenu here
-                'submenu' => array(
-                    //this menu item is part of the submenu
-                    'items' => array(
-                        'item 1' => array('text' => 'Reset', 'url' => 'resetDBController.php', 'title' => 'Reset DB'),
-                        /*'item 2' => array('text' => 'Kmom02', 'url' => 'kmom02.php', 'title' => 'Kmom02'),
-                        'item 3' => array('text' => 'Kmom03', 'url' => 'kmom03.php', 'title' => 'Kmom03'),
-                        'item 4' => array('text' => 'Kmom04', 'url' => 'kmom04.php', 'title' => 'Kmom04'),*/
-                    ),
-                ),
-        ),
-        'login' => array('text' =>  'Login', 'url' =>        'loginController.php', 'title' => 'Logga in för att ändra i databasen'),
-        'logout' => array('text' => 'Logout', 'url' =>       'logoutController.php', 'title' => 'Logga ut'),
+        'Image' => array('text' => 'Gallery', 'url' => 'gallery.php', 'title' => 'Gallery'),
+        
+//        'blog' => array('text' =>  'Blogg', 'url' =>        'viewController.php', 'title' => 'Vy som visar innehållet',
+//            //lets add the submenu here
+//                'submenu' => array(
+//                    //this menu item is part of the submenu
+//                    'items' => array(
+//                        'item 1' => array('text' => 'Reset', 'url' => 'resetDBController.php', 'title' => 'Reset DB'),
+//                        /*'item 2' => array('text' => 'Kmom02', 'url' => 'kmom02.php', 'title' => 'Kmom02'),
+//                        'item 3' => array('text' => 'Kmom03', 'url' => 'kmom03.php', 'title' => 'Kmom03'),
+//                        'item 4' => array('text' => 'Kmom04', 'url' => 'kmom04.php', 'title' => 'Kmom04'),*/
+//                    ),
+//                ),
+//        ),
+//        'login' => array('text' =>  'Login', 'url' =>        'loginController.php', 'title' => 'Logga in för att ändra i databasen'),
+//        'logout' => array('text' => 'Logout', 'url' =>       'logoutController.php', 'title' => 'Logga ut'),
         'kallkod' => array('text' =>'Källkod', 'url' =>      'source.php', 'title' => 'Se källkoden'),
     ),
     'callback' => function($url) {

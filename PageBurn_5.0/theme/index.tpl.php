@@ -19,14 +19,14 @@
 <body>
   <div id='wrapper'>
     <div id='header'><?=$header?></div>
-      <?php if(isset($navbar)): ?><div id='navbar'><?=get_navbar($navbar)?></div><?php endif; ?>
-    
-	    <div id='content'>
-	    	<div id='main'><?=$main?></div>
-	    </div>
+    <?php if(isset($navbar)): ?><div id='navbar'><?=get_navbar($navbar)?></div><?php endif; ?>
+   
+	<div id='content'>
+	    <div id='main'><?=$main?></div>
+	</div>
     <?php if(isset($sidebar)): ?>
-    <aside id='sidebar'>//<?= $sidebarTitle ?><br><?=get_navbar($sidebar)?></aside>
-    //<?php endif; ?>
+    <aside id='sidebar'><?= $sidebarTitle ?><br><?=$sidebar?></aside>
+    <?php endif; ?>
     <div id='footer'><?=$footer?></div>
   </div>
 <?php if(isset($jquery)):?><script src='<?=$jquery?>'></script><?php endif; ?>

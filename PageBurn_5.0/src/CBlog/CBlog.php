@@ -11,8 +11,7 @@ class CBlog extends CContent {
         $this->slug = isset($_GET['slug']) ? $_GET['slug'] : null;
         // Get content
         $slugSql = $this->slug ? 'slug = ?' : '1';
-        // Get content
-        $slugSql = $this->slug ? 'slug = ?' : '1';
+
         $sql = "
             SELECT *
             FROM Content
@@ -32,8 +31,7 @@ class CBlog extends CContent {
         parent::sanitizeVariables($c);
         
         $filter = new CTextFilter(); 
-            // Sanitize content before using it.
-           // Sanitize content before using it.
+        // Sanitize content before using it.
         $this->title  = htmlentities($c->title, null, 'UTF-8');
         $this->data   = $filter->doFilter(htmlentities($c->data, null, 'UTF-8'), $c->filter);
     }

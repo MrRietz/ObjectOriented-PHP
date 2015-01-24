@@ -49,6 +49,8 @@ class CBlog extends CContent {
         $html .= "Published: {$this->published}<br><br>";
         $html .= "{$editLink}";
         $html .= "</footer>";
+        $html .= "</article>";
+        $html .= "</section>";
         return $html;
     }
     

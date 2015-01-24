@@ -18,9 +18,9 @@
 </head>
 <body>
   <div id='wrapper'>
-    <div id='header'><?=$header?></div>
+    <div id='header'><?=$header?>
     <?php if(isset($navbar)): ?><div id='navbar'><?=get_navbar($navbar)?></div><?php endif; ?>
-   
+   </div>
 	<div id='content'>
 	    <div id='main'><?=$main?></div>
 	</div>

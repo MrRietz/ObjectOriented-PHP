@@ -9,7 +9,10 @@ My Main Stylesheet
  */
 body 
 {
-    background-image: url('../img/background.jpg');
+    background: #c0c0c0; 
+    background: linear-gradient(top, #c0c0c0 0%, #e9e9e9 60%);  
+    background: -moz-linear-gradient(top, #c0c0c0 0%, #e9e9e9 60%); 
+    background: -webkit-linear-gradient(top, #c0c0c0 0%,#e9e9e9 60%); 
     color: #000305;
     font-size: 87.5%; /* Base font size: 14px */
     font-family: 'Trebuchet MS', Trebuchet, 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
@@ -89,10 +92,12 @@ Layout for navbar
     background-color: #FFF;	
     padding: 3% 5%;	
     margin-bottom: 3%;
+        min-height: 1000px;
 }
 #content
 {
     width: 68%;
+
     float: left;
     border-radius: 5px;
     -moz-border-radius: 5px;

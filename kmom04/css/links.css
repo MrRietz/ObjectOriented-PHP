@@ -195,11 +195,11 @@ nav li li li.selected
 
 .nb-skype li li.selected {
 
-   background:#9bccec;
-      color:#000000;
-		 -webkit-border-radius: 5px;
-	 -moz-border-radius: 5px;
-	 border-radius: 5px;
+    background:#9bccec;
+    color:#000000;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 

@@ -93,7 +93,7 @@ $pageburn['navbar'] = array(
     'class' => 'nb-skype',
     'items' => array(
         //this is a menu item
-        'hem' => array('text' => 'Hem', 'url' => 'me.php', 'title' => 'Min presentation om mig själv'),
+        'hem' => array('text' => 'Hem', 'url' => 'home.php', 'title' => 'Min presentation om mig själv'),
         'filmer' => array('text' => 'Filmer', 'url' => 'gallery.php', 'title' => 'Gallery'),
         'nyheter' => array('text' =>  'Blogg', 'url' =>        'news.php', 'title' => 'Vy som visar innehållet',
             //lets add the submenu here

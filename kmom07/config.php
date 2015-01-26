@@ -14,7 +14,7 @@ ini_set('output_buffering', 0);   // Do not buffer outputs, write directly
 /**
   Define Pageburn paths.
  * ********************************************************************** */
-define('PAGEBURN_INSTALL_PATH', __DIR__ . '/../PageBurn_5.0');
+define('PAGEBURN_INSTALL_PATH', __DIR__ . '/../PageBurn_7_0');
 define('PAGEBURN_THEME_PATH', PAGEBURN_INSTALL_PATH . '/theme/render.php');
 
 /**
@@ -42,17 +42,20 @@ $pageburn['title_append'] = ' | Robins Sida';
 
 
 $pageburn['header'] = <<<EOD
-<img class ='sitelogo' src='img/pageburn.png' alt='pageburn Logo'/>
-<span class='sitetitle'> Me oophp</span> 
-<span class='siteslogan'>Min Me-sida i kursen Databaser och Objektorienterad PHP-programmering</span>
+<a href='home.php'>
+    <img class ='sitelogo' src='img/header.png' alt='pageburn Logo'/>
+</a>
 EOD;
 $pageburn['sidebarTitle'] = "<h2>News</h2>";
 $pageburn['sidebar'] = <<<EOD
-<img class ='sitelogo' src='img/pageburn.png' alt='pageburn Logo'/>
 EOD;
 
 $pageburn['footer'] = <<<EOD
-<footer><span class='sitefooter'>Copyright (c) RM Rental Movies | <a href='https://github.com/MrRietz/ObjectOriented-PHP/tree/master/PageBurn_5.0'>Pageburn på GitHub</a> | <a href='http://validator.w3.org/unicorn/check?ucn_uri=referer&amp;ucn_task=conformance'>Unicorn</a></span></footer>
+<footer><span class='sitefooter'>Copyright (c) RM Rental Movies | 
+    <a href='https://github.com/MrRietz/ObjectOriented-PHP/tree/master/PageBurn_5.0'>Pageburn på GitHub</a> | 
+    <a href='http://validator.w3.org/unicorn/check?ucn_uri=referer&amp;ucn_task=conformance'>Unicorn</a></span> |
+    <a href='admin.php'>Admin</a></span> |
+</footer>
 EOD;
 
 
@@ -80,7 +83,7 @@ define('DB_PASSWORD', 'UZ"D7Vw/'); // The database password
 //$pageburn['database']['dsn'] = 'mysql:host=blu-ray.student.bth.se;dbname=rorb09;';
 //$pageburn['database']['username'] = DB_USER;
 //$pageburn['database']['password'] = DB_PASSWORD;
-$pageburn['database']['dsn'] = 'mysql:host=localhost;dbname=Kmom05;';
+$pageburn['database']['dsn'] = 'mysql:host=localhost;dbname=Kmom07;';
 $pageburn['database']['username'] = 'root';
 $pageburn['database']['password'] = '';
 $pageburn['database']['driver_options'] = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'");
@@ -90,22 +93,21 @@ $pageburn['database']['driver_options'] = array(PDO::MYSQL_ATTR_INIT_COMMAND => 
  * ********************************************************************** */
 //$pageburn['navbar'] = null; // To skip the navbar
 $pageburn['navbar'] = array(
-    'class' => 'nb-skype',
+    'class' => 'main-nav',
     'items' => array(
         //this is a menu item
-        'hem' => array('text' => 'Hem', 'url' => 'home.php', 'title' => 'Min presentation om mig själv'),
-        'filmer' => array('text' => 'Filmer', 'url' => 'gallery.php', 'title' => 'Gallery'),
-        'nyheter' => array('text' =>  'Blogg', 'url' =>        'news.php', 'title' => 'Vy som visar innehållet',
+        'hem' => array('text' => 'HEM', 'url' => 'home.php', 'title' => 'Min presentation om mig själv'),
+        'filmer' => array('text' => 'FILMER', 'url' => 'gallery.php', 'title' => 'Gallery'),
+        'nyheter' => array('text' => 'NYHETER', 'url' => 'news.php', 'title' => 'Vy som visar innehållet',
             //lets add the submenu here
-                'submenu' => array(
-                    //this menu item is part of the submenu
-                    'items' => array(
-                        'item 1' => array('text' => 'Reset', 'url' => 'resetDBController.php', 'title' => 'Reset DB'),
-                    ),
+            'submenu' => array(
+                //this menu item is part of the submenu
+                'items' => array(
+                    'item 1' => array('text' => 'Reset', 'url' => 'resetDBController.php', 'title' => 'Reset DB'),
                 ),
+            ),
         ),
-        'admin' => array('text' =>  'Admin', 'url' =>        'loginController.php', 'title' => 'Logga in för att ändra i databasen'),
-        'kallkod' => array('text' =>'Källkod', 'url' =>      'source.php', 'title' => 'Se källkoden'),
+        'om' => array('text' => 'OM', 'url' => '#.php', 'title' => 'Om'),
     ),
     'callback' => function($url) {
         if (basename($_SERVER['SCRIPT_FILENAME']) == $url) {

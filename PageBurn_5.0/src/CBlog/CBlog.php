@@ -42,7 +42,7 @@ class CBlog extends CContent {
         $html .= "<section>";
         $html .= "<article>";
         $html .= "<header>";
-        $html .= "<h1><a href='blogController.php?slug={$this->slug}'>{$this->title}</a></h1>";
+        $html .= "<h1><a href='news.php?slug={$this->slug}'>{$this->title}</a></h1>";
         $html .= "</header>";
         $html .= "{$this->data}";
         $html .= "<footer>";

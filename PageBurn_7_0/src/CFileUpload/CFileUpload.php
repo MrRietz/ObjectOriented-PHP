@@ -7,7 +7,7 @@ class CFileUpload {
     }
     public function uploadFile() {
         
-        $target_dir = "img/";
+        $target_dir = "img/movies";
         $target_file = $target_dir . basename($_FILES[$this->file]['name']);
         $uploadOk = 1;
         $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);

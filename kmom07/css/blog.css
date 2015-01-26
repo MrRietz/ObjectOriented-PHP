@@ -1,0 +1,29 @@
+
+
+.blogpost {
+    border-bottom: dotted 1px; 
+}
+.blogpost h1 {
+  background: linear-gradient(top, #de1818 0%, #f85757 60%);  
+  background: -moz-linear-gradient(top, #de1818 0%, #f85757 60%); 
+  background: -webkit-linear-gradient(top, #de1818 0%,#f85757 60%); 
+  padding: 0.4em;
+  color: #ffff00;
+}
+
+.blogpost h1 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.blogpost h1 a:hover {
+  text-decoration: underline;
+}
+
+
+.blogpost footer {
+  font-size: x-small;
+  text-align: right;
+
+}
+

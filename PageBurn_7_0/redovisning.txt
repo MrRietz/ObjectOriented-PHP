@@ -1,0 +1,43 @@
+Skriv redovisningstext på din me-sida. Skriv ett stycke (minst 15 meningar) om kursmomentet.
+ Reflektera över:
+* svårigheter
+inga svårigheter
+* problem
+Få flera spelare att fungera
+Blanda strängar med php koden, löste det genom att skapa en html sträng för allt som ska skrivas ut och bara skriva ut variabeln i main
+
+* lösningar
+* erfarenheter
+
+* lärdomar
+Rendera ut php i en html variabel
+
+* resultatet, etc.
+
+Se till att följande frågor besvaras i texten:
+
+    Hur väl känner du till objektorienterade koncept och programmeringssätt?
+    Mycket väl, kan det i c++ ,c#, java  det var 
+    Jobbade du igenom oophp20-guiden eller skumläste du den?
+Jag jobbade igenom guiden det finns en fil som heter test.php som går igenom den.
+
+    Berätta om hur du löste uppgiften med tärningsspelet 100, hur tänkte du och hur gjorde du, hur organiserade du din kod?
+Efter att jag slutfört guiden så började jag att göra tärningsspelet. Jag började med att göra en ny pagecontroller dicegame.php som inte gör 
+annat än att skapa ett nytt CDicegame100 objekt för att sedan köra funktionen PlayGame() i main renderingen till Anax.
+
+    Berätta om hur du löste uppgiften med Månadens Babe, hur tänkte du och hur gjorde du, hur organiserade du din kod?
+	
+	for($i = 0; $i < $this->numPlayers; $i++)
+	{
+		$this->players[] = new CDiceHand(1);
+		// Create the object or get it from the session
+		if(isset($_SESSION['dicehand'])) 
+		{
+			$this->players[]  = $_SESSION['dicehand'];
+		}
+		else 
+		{
+			
+			//$_SESSION['dicehand'] = $this->players[];	
+		}
+	}

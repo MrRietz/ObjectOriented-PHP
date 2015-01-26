@@ -9,7 +9,7 @@ $pageburn['stylesheets'][] = 'css/figure.css';
 $pageburn['stylesheets'][] = 'css/gallery.css'; 
 $pageburn['stylesheets'][] = 'css/breadcrumb.css'; 
 
-define('GALLERY_PATH', __DIR__ . DIRECTORY_SEPARATOR . 'img');
+define('GALLERY_PATH', __DIR__ . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . 'movies');
 define('GALLERY_BASEURL', '');
 
 $gallery = new CGallery(); 

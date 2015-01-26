@@ -1,0 +1,57 @@
+USE kmom07;
+
+SET NAMES 'utf8';
+
+
+--
+-- Create table for Content
+--
+DROP TABLE IF EXISTS Content;
+CREATE TABLE Content
+(
+    id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    slug CHAR(80) UNIQUE,
+    url CHAR(80) UNIQUE,
+
+    type CHAR(80),
+    title VARCHAR(80),
+    data TEXT,
+    filter CHAR(80),
+
+    published DATETIME,
+    created DATETIME,
+    updated DATETIME,
+    deleted DATETIME
+
+) ENGINE INNODB CHARACTER SET utf8;
+
+DELETE FROM Content;
+
+INSERT INTO Content (slug, url, type, title, data, filter, published, created) VALUES
+    ('blogpost-1', null, 'post', 'Välkommen till min blogg!', "Detta är en bloggpost.\n\nNär det finns länkar till andra webbplatser så kommer de länkarna att bli klickbara.\n\nhttp://dbwebb.se är ett exempel på en länk som blir klickbar.", 'link,nl2br', NOW(), NOW()),
+    ('blogpost-2', null, 'post', 'Nu har sommaren kommit', "Detta är en bloggpost som berättar att sommaren har kommit, ett budskap som kräver en bloggpost.", 'nl2br', NOW(), NOW()),
+    ('blogpost-3', null, 'post', 'Nu har hösten kommit', "Detta är en bloggpost som berättar att sommaren har kommit, ett budskap som kräver en bloggpost", 'nl2br', NOW(), NOW())
+;
+
+
+--
+-- Table for user
+--
+DROP TABLE IF EXISTS User;
+
+CREATE TABLE User
+(
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  acronym CHAR(12) UNIQUE NOT NULL,
+  name VARCHAR(80),
+  password CHAR(32),
+  salt INT NOT NULL
+) ENGINE INNODB CHARACTER SET utf8;
+
+INSERT INTO User (acronym, name, salt) VALUES 
+  ('burnie', 'Robin Rietz', unix_timestamp()),
+  ('admin', 'Administrator', unix_timestamp())
+;
+
+UPDATE User SET password = md5(concat('burnie', salt)) WHERE acronym = 'burnie';
+UPDATE User SET password = md5(concat('admin', salt)) WHERE acronym = 'admin';

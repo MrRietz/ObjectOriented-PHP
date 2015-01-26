@@ -1,103 +1,103 @@
-.nb-skype
-{
+.main-nav {
     margin: 0 auto;
-
 }
-.nb-skype ul 
-{
 
+.main-nav ul {
     list-style: none; 
-    margin: 0; 
-    padding: 0;
-    background: #de1818; 
-    background: linear-gradient(top, #de1818 0%, #f85757 60%);  
-    background: -moz-linear-gradient(top, #de1818 0%, #f85757 60%); 
-    background: -webkit-linear-gradient(top, #de1818 0%,#f85757 60%); 
-    box-shadow: 0px 0px 9px rgba(0,0,0,0.15);
-    padding: 0 20px;
-    border-radius: 10px;  
-    position: relative;
-
+    margin: 0 auto; 
 }
-.nb-skype li 
-{ 
-    margin: 0.5em;
+
+.main-nav li {
+    
+    margin: 1em;
     display: inline-block;
     position: relative; 
 }
-ul.nb-skype li:first-child {
+
+ul.main-nav li:first-child {
     padding-left: 0;
 }
 
-.nb-skype ul:after 
-{
+.main-nav ul:after {
+    
     content: "";
     clear: both;
     display: block;
 }
-.nb-skype a {
 
-    color: #000;
+.main-nav a {
+
+    color: #ffff00;
     font:bold 16px Helvetica,Arial,sans-serif;
-    padding:8px;
+    padding:5px;
     text-decoration:none;
-    padding: 0.5em;
+    padding: 1.8em;
     display: block; 
 }
 
-.nb-skype li:hover 
-{
-    background:#f85757;
-    color:#fff;
+.main-nav a:hover {
+
+    color: #ffff00;
+    text-decoration:none;
+}
+
+.main-nav li:hover {
+    
+    background: #f2adad;
+
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
 } 
 
-.nb-skype li.selected-parent, 
-.nb-skype li.selected 
-{
-
-    background:#4dabe7;
-
-    color:#FFFFFF;
+.main-nav li selected-parent, .main-nav li.selected {
+    
+    background: linear-gradient(bottom, #de1818 0%, #f2adad 50%);  
+    background: -moz-linear-gradient(bottom, #de1818 0%, #f2adad 50%); 
+    background: -webkit-linear-gradient(bottom, #de1818 0%,#f2adad 50%); 
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-
 }
 
-.nb-skype ul ul 
-{
+.main-nav ul ul {
+    
     background-color: #4b545f; 
     padding: 8px; 
     position: absolute; 
     left: -9999px; 
     z-index: 2;
 }
-.nb-skype ul ul li 
-{
+
+.main-nav ul ul li {
+    
     float: none; 
     position: relative;
 }
-.nb-skype li li 
-{
+
+.main-nav li li {
+    
     border-top: none;  
     border-left: 4px solid transparent;  
 }
 
-.nb-skype li:hover > ul 
-{
+.main-nav li:hover > ul {
+    
+    background: #de1818; 
+    background: linear-gradient(top, #de1818 0%, #f85757 60%);  
+    background: -moz-linear-gradient(top, #de1818 0%, #f85757 60%); 
+    background: -webkit-linear-gradient(top, #de1818 0%,#f85757 60%); 
+    border-radius: 5px;
     color: #fff; 
     left: 0;
 }
 
-.nb-skype li li:hover {
-    background-color: #9bccec;
-
+.main-nav li li:hover {
+    background-color: #f2adad;
+    border-radius: 5px;
 }
 
-.nb-skype li li.selected {
+.main-nav li li.selected {
 
     background:#9bccec;
     color:#000000;
@@ -108,13 +108,12 @@ ul.nb-skype li:first-child {
 
 
 
-.sidebarNav
-{
+.sidebarNav {
+    
     margin: 0 auto;
-
 }
-.sidebarNav ul 
-{
+
+.sidebarNav ul {
 
     list-style: none; 
     margin: 0; 
@@ -129,22 +128,25 @@ ul.nb-skype li:first-child {
     position: relative;
 
 }
-.sidebarNav li 
-{ 
-    margin: 0.5em;
 
+.sidebarNav li {
+    
+    margin: 0.5em;
     position: relative; 
 }
+
 ul.sidebarNav li:first-child {
+    
     padding-left: 0;
 }
 
-.sidebarNav ul:after 
-{
+.sidebarNav ul:after {
+
     content: "";
     clear: both;
     display: block;
 }
+
 .sidebarNav a {
 
     color: #000;
@@ -155,8 +157,8 @@ ul.sidebarNav li:first-child {
     display: block; 
 }
 
-.sidebarNav li:hover 
-{
+.sidebarNav li:hover {
+    
     background:#4dabe7;
     color:#fff;
     -webkit-border-radius: 5px;
@@ -165,46 +167,45 @@ ul.sidebarNav li:first-child {
 } 
 
 .sidebarNav li.selected-parent, 
-.sidebarNav li.selected 
-{
+.sidebarNav li.selected {
 
     background:#4dabe7;
-
     color:#FFFFFF;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-
 }
 
-.sidebarNav ul ul 
-{
+.sidebarNav ul ul {
+    
     background-color: #4b545f; 
     padding: 8px; 
     position: absolute; 
     left: -9999px; 
     z-index: 2;
 }
-.sidebarNav ul ul li 
-{
+
+.sidebarNav ul ul li {
+    
     float: none; 
     position: relative;
 }
-.sidebarNav li li 
-{
+
+.sidebarNav li li {
+    
     border-top: none;  
     border-left: 4px solid transparent;  
 }
 
-.sidebarNav li:hover > ul 
-{
+.sidebarNav li:hover > ul {
+    
     color: #fff; 
     left: 0;
 }
 
 .sidebarNav li li:hover {
+    
     background-color: #9bccec;
-
 }
 
 .sidebarNav li li.selected {
@@ -215,4 +216,3 @@ ul.sidebarNav li:first-child {
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
-

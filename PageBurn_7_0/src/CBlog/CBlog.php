@@ -5,7 +5,20 @@ class CBlog extends CContent {
     public function __construct($database) {
         parent::__construct($database);
     }
+    public function getHomePosts() {
+        
+        $sql = "
+            SELECT *
+            FROM Content
+            WHERE
+            type = 'post' AND
+              published <= NOW()
+            ORDER BY published DESC LIMIT 3;
+            ";
 
+        $res = $this->db->ExecuteSelectQueryAndFetchAll($sql);
+        return $res; 
+    }
     public function getPosts() {
         
         $this->slug = isset($_GET['slug']) ? $_GET['slug'] : null;

@@ -14,6 +14,12 @@ $fileUpload = new CFileUpload();
 
 // Get parameters 
 $title  = isset($_POST['title']) ? strip_tags($_POST['title']) : null;
+$title  = isset($_POST['director']) ? strip_tags($_POST['director']) : null;
+$title  = isset($_POST['year']) ? strip_tags($_POST['year']) : null;
+$title  = isset($_POST['image']) ? strip_tags($_POST['image']) : null;
+$title  = isset($_POST['subtext']) ? strip_tags($_POST['title']) : null;
+$title  = isset($_POST['title']) ? strip_tags($_POST['title']) : null;
+$title  = isset($_POST['title']) ? strip_tags($_POST['title']) : null;
 $create = isset($_POST['create'])  ? true : false;
 $acronym = isset($_SESSION['user']) ? $_SESSION['user']->acronym : null;
 
@@ -22,11 +28,13 @@ isset($acronym) or die('Check: You must login to edit.');
 
 // Check if form was submitted
 if($create) {
-  $sql = 'INSERT INTO Movie (title) VALUES (?)';
-  $db->ExecuteQuery($sql, array($title));
+  $sql = 'INSERT INTO Movie (title, director, year, image, subtext, speech, asideImg, price, published, created, updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), NOW())';
+
+  $db->ExecuteQuery($sql);
   $db->SaveDebug();
   
-  $fileUpload->uploadFile(); 
+  $fileUpload->uploadFile('image');
+  $fileUpload->uploadFile('asideImg');
   //header('Location: movie_edit.php?id=' . $db->LastInsertId());
   exit;
 }
@@ -45,7 +53,15 @@ $pageburn['main'] = <<<EOD
   <fieldset>
   <legend>Skapa ny film</legend>
   <p><label>Titel:<br/><input type='text' name='title'/></label></p>
-  <input type="file" name="uploadfile" id="uploadfile">
+  <p><label>Regissör:<br/><input type='text' name='director'/></label></p>
+  <p><label>Årtal:<br/><input type='text' name='year'/></label></p>
+  <p><label>Subs:<br/><input type='text' name='subtext'/></label></p>
+  <p><label>Tal:<br/><input type='text' name='speech'/></label></p>
+  <p><label>Pris:<br/><input type='text' name='price'/></label></p>
+
+
+  <p>Bild1:<input type="file" name="image" id="uploadfile"></p>
+  <p>Bild2:<input type="file" name="asideImg" id="uploadfile"></p>
   <p><input type='submit' name='create' value='Skapa'/></p>
   </fieldset>
 </form>

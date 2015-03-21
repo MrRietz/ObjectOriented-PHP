@@ -1,4 +1,4 @@
-USE rorb09;
+USE kmom07;
 
 SET NAMES 'utf8';
 
@@ -26,17 +26,20 @@ CREATE TABLE Movie
     image VARCHAR(100) DEFAULT NULL, -- Link to an image
     subtext CHAR(3) DEFAULT NULL, -- swe, fin, en, etc
     speech CHAR(3) DEFAULT NULL, -- swe, fin, en, etc
-    quality CHAR(3) DEFAULT NULL,
-    format CHAR(3) DEFAULT NULL -- mp4, divx, etc
+    asideImg VARCHAR(100) DEFAULT NULL,
+    price int,
+    published DATETIME,
+    created DATETIME,
+    updated DATETIME
 ) ENGINE INNODB CHARACTER SET utf8;
 
 
-INSERT INTO Movie (title, year, image) VALUES
-    ('Pulp fiction', 1994, 'img/movie/pulp-fiction.jpg'),
-    ('American Pie', 1999, 'img/movie/american-pie.jpg'),
-    ('Pokémon The Movie 2000', 1999, 'img/movie/pokemon.jpg'),    
-    ('Kopps', 2003, 'img/movie/kopps.jpg'),
-    ('From Dusk Till Dawn', 1996, 'img/movie/from-dusk-till-dawn.jpg')
+INSERT INTO Movie (title, director, length, year, image,subtext,speech,asideImg, price, published, created, updated) VALUES
+    ('Pulp fiction', 'Gustavo', 100, 1994, 'pulp-fiction.jpg', 'eng', 'eng', 'pulp-fiction.jpg', 100, NOW(), NOW(), NOW()),
+    ('American Pie', 'Gustavo', 100, 1999, 'american-pie.jpg', 'eng', 'eng', 'american-pie.jpg', 34, NOW(), NOW(), NOW()),
+    ('Pokémon The Movie 2000', 'Gustavo', 100, 1999, 'pokemon.jpg', 'eng', 'eng', 'pokemon.jpg', 234, NOW(), NOW(), NOW()),
+    ('Kopps', 'Nils Holger', 231, 2003, 'kopps.jpg', 'eng', 'eng', 'kopps.jpg', 203, NOW(), NOW(), NOW()),
+    ('From Dusk Till Dawn', 'Sten Sture',  233, 1996, 'kopps.jpg', 'eng', 'eng', 'from-dusk-till-dawn.jpg', 233, NOW(), NOW(), NOW())
 ;
 
 

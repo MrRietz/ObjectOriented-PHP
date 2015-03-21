@@ -38,14 +38,24 @@ $pageburn = array();
 
 /** Site settings */
 $pageburn['lang'] = 'sv';
-$pageburn['title_append'] = ' | Robins Sida';
+$pageburn['title_append'] = ' | RM Rental Movies';
 
 
 $pageburn['header'] = <<<EOD
 <a href='home.php'>
-    <img class ='sitelogo' src='img/header.png' alt='pageburn Logo'/>
-</a>
+    <img class ='sitelogo' src='img/header.png' alt='pageburn Logo'/>        
+</a>      
 EOD;
+
+$pageburn['searchbar'] = <<<EOD
+      <form id='search' action='movies.php'>
+      <p>
+          <label>Sök på titel: <input type='search' name='title' value=''/></label>
+          <input type='submit' name='submit' value='Go'>
+      </p>
+      </form> 
+EOD;
+
 $pageburn['sidebarTitle'] = "<h2>News</h2>";
 $pageburn['sidebar'] = <<<EOD
 EOD;
@@ -93,11 +103,11 @@ $pageburn['database']['driver_options'] = array(PDO::MYSQL_ATTR_INIT_COMMAND => 
  * ********************************************************************** */
 //$pageburn['navbar'] = null; // To skip the navbar
 $pageburn['navbar'] = array(
-    'class' => 'main-nav',
+    'class' => 'collapse navbar-collapse',
     'items' => array(
         //this is a menu item
         'hem' => array('text' => 'HEM', 'url' => 'home.php', 'title' => 'Min presentation om mig själv'),
-        'filmer' => array('text' => 'FILMER', 'url' => 'gallery.php', 'title' => 'Gallery'),
+        'filmer' => array('text' => 'FILMER', 'url' => 'movies.php', 'title' => 'Gallery'),
         'nyheter' => array('text' => 'NYHETER', 'url' => 'news.php', 'title' => 'Vy som visar innehållet',
             //lets add the submenu here
             'submenu' => array(
@@ -117,15 +127,11 @@ $pageburn['navbar'] = array(
 );
 
 
-
 /**
  * Theme related settings.
  * ********************************************************************** */
-//$anax['stylesheet'] = 'css/style.css';
-$pageburn['stylesheets'] = array('css/style.css');
+$pageburn['stylesheets'] = array('css/pageburn.css');
 $pageburn['favicon'] = 'favicon.ico';
-
-
 
 /**
  * Settings for JavaScript.

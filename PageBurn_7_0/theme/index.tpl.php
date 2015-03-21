@@ -17,9 +17,14 @@
 <script src='<?=$modernizr?>'></script>
 </head>
 <body>
-  <div id='wrapper'>
+  <div class='container-fluid'>
     <div id='header'><?=$header?>
-    <?php if(isset($navbar)): ?><div id='navbar'><?=get_navbar($navbar)?></div><?php endif; ?>
+    <?php if(isset($navbar)): ?>
+     <div id='navbar'><?=get_navbar($navbar)?>
+        <div id ='searchbar'><?=$searchbar?></div>
+    </div>
+    <?php endif; ?>
+  
    </div>
 	<div id='content'>
 	    <div id='main'><?=$main?></div>

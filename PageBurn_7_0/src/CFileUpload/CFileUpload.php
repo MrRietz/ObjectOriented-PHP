@@ -2,18 +2,17 @@
 
 class CFileUpload {
     
-    private $file = "uploadfile"; 
     public function __construct() {
     }
-    public function uploadFile() {
+    public function uploadFile($file) {
         
         $target_dir = "img/movies";
-        $target_file = $target_dir . basename($_FILES[$this->file]['name']);
+        $target_file = $target_dir . basename($_FILES[$file]['name']);
         $uploadOk = 1;
         $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
         // Check if image file is a actual image or fake image
         if(isset($_POST["submit"])) {
-            $check = getimagesize($_FILES[$this->file]['tmp_name']);
+            $check = getimagesize($_FILES[$file]['tmp_name']);
             if($check !== false) {
                 echo "File is an image - " . $check["mime"] . ".";
                 $uploadOk = 1;
@@ -28,7 +27,7 @@ class CFileUpload {
             $uploadOk = 0;
         }
         // Check file size
-        if ($_FILES[$this->file]["size"] > 500000) {
+        if ($_FILES[$file]["size"] > 500000) {
             echo "Sorry, your file is too large.";
             $uploadOk = 0;
         }
@@ -43,8 +42,8 @@ class CFileUpload {
             echo "Sorry, your file was not uploaded.";
         // if everything is ok, try to upload file
         } else {
-            if (move_uploaded_file($_FILES[$this->file]["tmp_name"], $target_file)) {
-                echo "The file ". basename( $_FILES[$this->file]["name"]). " has been uploaded.";
+            if (move_uploaded_file($_FILES[$file]["tmp_name"], $target_file)) {
+                echo "The file ". basename( $_FILES[$file]["name"]). " has been uploaded.";
             } else {
                 echo "Sorry, there was an error uploading your file.";
             }

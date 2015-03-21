@@ -47,27 +47,37 @@ if($user->IsAuthenticated())
 EOD;
         /** The sidebar
      * ********************************************************************** */
-    $pageburn['sidebarTitle'] = "<h2>Min filmdatabas</h2>";
+    $pageburn['sidebarTitle'] = "<h2>Admin</h2>";
     $pageburn['sidenav'] = array(
         'class' => 'sidebarNav',
         'items' => array(
             //this is a menu item
-            'All' => array(
-                'text' => 'Alla filmer',
-                'url' => 'movie_connect.php',
+            'addmovie' => array(
+                'text' => 'Lägg till film',
+                'url' => 'movie_create.php',
                 'title' => 'Alla filmer'),
-            'Titlesearch' => array(
-                'text' => 'Sök på titel',
+            'editmovie' => array(
+                'text' => 'Editera film',
                 'url' => 'movie_search_title.php',
                 'title' => 'Movie title'
             ),
-            'Yearsearch' => array(
-                'text' => 'Sök på år',
+            'deletemovie' => array(
+                'text' => 'Ta bort film',
                 'url' => 'movie_search_by_year.php',
                 'title' => 'Year'
             ),
-            'Genresearch' => array(
-                'text' => 'Sök på genre',
+            'addnews' => array(
+                'text' => 'Lägg till nyhet',
+                'url' => 'movie_search_genre.php',
+                'title' => 'Genre'
+            ),
+            'editnews' => array(
+                'text' => 'Lägg till nyhet',
+                'url' => 'movie_search_genre.php',
+                'title' => 'Genre'
+            ),
+            'removenews' => array(
+                'text' => 'Lägg till nyhet',
                 'url' => 'movie_search_genre.php',
                 'title' => 'Genre'
             ),

@@ -3,34 +3,32 @@
  */
 ul.gallery {
   list-style: none;
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
 }
 
-ul.gallery li {
+ul.gallery li{
   display: inline-block;
-  margin: 0;
-  padding: 0;
-  margin-right: 8px;
-  margin-bottom: 8px;
-}
-
-ul.gallery li {
-  border: 1px solid #ccc;
+  margin: 0 auto;
+  width: 18em; 
+  height: 30em; 
+  margin-right: 0.3em;
+  margin-bottom: 0.3em;
   padding: 4px;
 }
 
-ul.gallery li figure  {
-  margin: 0;
+ul.gallery li figure {
+  margin: 0 auto;
 }
 
 ul.gallery li figure figcaption {
-  font-size: 0.85em;
+  font-size: 0.9em;
   color: #666;
+  text-align: left;
 }
 
 ul.gallery li:hover  {
-  background-color: #ccc;
+  background-color: #faf1b4;
 }
 
 ul.gallery li:hover figcaption {
@@ -39,4 +37,8 @@ ul.gallery li:hover figcaption {
 
 ul.gallery li a  {
   text-decoration: none;
+}
+ul.gallery li figure figcaption span{
+  color: #cd3434;
+  font-weight: bold;
 }

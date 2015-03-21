@@ -7,6 +7,10 @@
 
 $(document).ready(function () {
     $('#login').click(function () {
-             alert("Fel användarnamn eller lösenord!")//        $('#message').html(this + "Fel inloggningsuppgifter försök igen!");
+        var isOffline = '<?php echo $output; ?>'; 
+        if (isOffline.toString() === 'Du är offline.')
+        {
+            alert("Fel användarnamn eller lösenord!")
+        }
     });
 });

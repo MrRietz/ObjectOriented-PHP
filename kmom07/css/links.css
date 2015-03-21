@@ -1,10 +1,12 @@
 .main-nav {
     margin: 0 auto;
+    display: inline-block;      
 }
 
 .main-nav ul {
     list-style: none; 
     margin: 0 auto; 
+
 }
 
 .main-nav li {
@@ -52,9 +54,9 @@ ul.main-nav li:first-child {
 
 .main-nav li selected-parent, .main-nav li.selected {
     
-    background: linear-gradient(bottom, #de1818 0%, #f2adad 50%);  
-    background: -moz-linear-gradient(bottom, #de1818 0%, #f2adad 50%); 
-    background: -webkit-linear-gradient(bottom, #de1818 0%,#f2adad 50%); 
+    background: linear-gradient(bottom, #961818 0%, #f85757 90%);  
+    background: -moz-linear-gradient(bottom, #961818 0%, #f85757 90%); 
+    background: -webkit-linear-gradient(bottom, #961818 0%,#f85757 90%); 
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -216,3 +218,42 @@ ul.sidebarNav li:first-child {
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
+
+
+form a {
+
+    background: linear-gradient(bottom, #961818 0%, #f85757 90%);  
+    background: -moz-linear-gradient(bottom, #961818 0%, #f85757 90%); 
+    background: -webkit-linear-gradient(bottom, #961818 0%,#f85757 90%); 
+        color: #ffff00;
+    text-decoration:  none; 
+    padding: 0.3em;
+    font-weight: bold;
+    
+    display: inline-block;
+    margin-bottom: 0.5em;
+}
+.movienav a{
+    display: inline-block;
+    text-decoration: none;
+}
+.rows a, .orderby a {
+    
+    color: inherit;
+    background: linear-gradient(bottom, #961818 0%, #f85757 90%);  
+    background: -moz-linear-gradient(bottom, #961818 0%, #f85757 90%); 
+    background: -webkit-linear-gradient(bottom, #961818 0%,#f85757 90%); 
+    
+    width: 1.6em;
+    text-align: center;
+    color: white;	
+}
+
+.rows {
+    float: right; 
+    margin-bottom: 1em;	
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+

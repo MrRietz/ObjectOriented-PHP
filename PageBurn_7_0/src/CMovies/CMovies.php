@@ -15,11 +15,9 @@ class CMovies {
     private $order = 'asc';
     private $max = 0;
     private $rows = 0;
-    private $gallery = null; 
 
     public function __construct($database) {
         $this->db = $database;
-        $this->gallery = new CGallery(); 
     }
 
     private function SetVariables() {
@@ -45,7 +43,7 @@ class CMovies {
         }
     }
 
-    private function GetAllGenres() {
+    public function GetAllGenres() {
         // Get all genres that are active
         $sql = '
 		  SELECT DISTINCT G.name
@@ -62,6 +60,27 @@ class CMovies {
                 $this->allGenres .= "<a href='" . $this->getQueryString(array('genre' => $val->name)) . "'>{$val->name}</a> ";
             }
         }
+        return $this->allGenres;
+    }
+
+    public function GetAllGenresHome() {
+        // Get all genres that are active
+        $sql = '
+		  SELECT DISTINCT G.name
+		  FROM Genre AS G
+		    INNER JOIN Movie2Genre AS M2G
+		      ON G.id = M2G.idGenre
+		';
+        $res = $this->db->ExecuteSelectQueryAndFetchAll($sql);
+
+        foreach ($res as $val) {
+            if ($val->name == $this->genre) {
+                $this->allGenres .= "$val->name ";
+            } else {
+                $this->allGenres .= "<a href='movies.php" . $this->getQueryString(array('genre' => $val->name)) . "'>{$val->name}</a> ";
+            }
+        }
+        return $this->allGenres;
     }
 
     private function GetByYearSql() {
@@ -109,17 +128,16 @@ class CMovies {
         }
     }
 
-    private function GetHTMLTable() {
+    private function GetMoviesFromDB() {
         $sqlStart = '
-			  SELECT 
-			    M.*,
-			    GROUP_CONCAT(G.name) AS genre
-			  FROM Movie AS M
-			    LEFT OUTER JOIN Movie2Genre AS M2G
-			      ON M.id = M2G.idMovie
-			    INNER JOIN Genre AS G
-			      ON M2G.idGenre = G.id
-			';
+	    SELECT M.*,
+            GROUP_CONCAT(G.name) AS genre
+	    FROM Movie AS M
+	    LEFT OUTER JOIN Movie2Genre AS M2G
+	    ON M.id = M2G.idMovie
+	    INNER JOIN Genre AS G
+	    ON M2G.idGenre = G.id';
+
         $groupby = ' GROUP BY M.id';
         $sort = " ORDER BY {$this->orderby} {$this->order}";
         $where = $this->GetWhereStatement();
@@ -134,12 +152,24 @@ class CMovies {
 		  ) AS Movie
 		";
         $res = $this->db->ExecuteSelectQueryAndFetchAll($sql, $this->params);
-        $rows = $res[0]->rows;
-        $this->max = ceil($rows / $this->hits);
+        $this->rows = $res[0]->rows;
+        $this->max = ceil($this->rows / $this->hits);
 
         $sql = $sqlStart . $where . $groupby . $sort . $this->GetLimit();
         $res = $this->db->ExecuteSelectQueryAndFetchAll($sql, $this->params);
 
+        return $res;
+    }
+
+    public function getMovieById($id) {
+
+        $sql = "SELECT * FROM Movie WHERE id=?";
+        $res = $this->db->ExecuteSelectQueryAndFetchAll($sql, array($id));
+
+        return $res[0];
+    }
+
+    private function getHtmlTable() {
         $container = " <table>
 		<tr>
 			<th>Row</th> 
@@ -148,18 +178,41 @@ class CMovies {
 			<th>Image</th>
 			<th>Year " . $this->orderby('year') . "</th> 
 		</tr>";
+
+        $res = $this->GetMoviesFromDB();
+
         foreach ($res AS $key => $obj) {
             $container .= "
 			<tr>
 				<td>{$key}</td>
 				<td>{$obj->id}</td>
 				<td>{$obj->title}</td>
-				<td><img src='{$obj->image}' width='80' height='40'></td>
+				<td><img src='" . IMG_PATH . "'{$obj->image}' width='80' height='40'></td>
 				<td>{$obj->year}</td>
 			</tr>
 			 ";
         }
         $container .=" </table>";
+        return $container;
+    }
+
+    private function getMovieGallery() {
+
+        $res = $this->GetMoviesFromDB();
+
+        $container = "<ul class='gallery'>";
+
+        foreach ($res as $val) {
+
+            $imgPath = IMG_PATH . $val->image;
+            $item = "<img src='img.php?src={$imgPath}&amp;width=200&amp;height=260&amp;crop-to-fit'/>";
+
+            $container .= "<li><a href='?id={$val->id}' title='{$val->title}'>"
+                    . "<figure>{$item}<figcaption><span>{$val->title}</span>"
+                    . " ({$val->year})<br>{$val->price} kr</figcaption></figure></a></li>";
+        }
+        $container .= "</ul>";
+
         return $container;
     }
 
@@ -234,12 +287,12 @@ class CMovies {
      * @return string with links to order by column.
      */
     private function orderby($column) {
-        $nav = "<a href='" . $this->getQueryString(array('orderby' => $column, 'order' => 'asc')) . "'>&darr;</a>";
-        $nav .= "<a href='" . $this->getQueryString(array('orderby' => $column, 'order' => 'desc')) . "'>&uarr;</a>";
+        $nav = "<a href='" . $this->getQueryString(array('orderby' => $column, 'order' => 'asc')) . "'>&or;      </a>";
+        $nav .= "<a href='" . $this->getQueryString(array('orderby' => $column, 'order' => 'desc')) . "'>&and;</a>";
         return "<span class='orderby'>" . $nav . "</span>";
     }
 
-    public function RenderHtml() {
+    public function RenderMovieTable() {
         $this->SetVariables();
         $table = $this->GetHTMLTable();
         $this->GetAllGenres();
@@ -250,27 +303,119 @@ class CMovies {
         return "<form>
 			<fieldset>
 			<legend>Sök</legend>
-			 <input type=hidden name=genre value='{$this->genre}'/>
-			 <input type=hidden name=hits value='{$this->hits}'/>
+			<input type=hidden name=genre value='{$this->genre}'/>
+			<input type=hidden name=hits value='{$this->hits}'/>
 			<p><label>Titel (delsträng, använd % som wildcard): <input type='search' name='title' value='{$this->title}'/></label></p>
 			
-			 <p><label>Välj genre:</label> {$this->allGenres}</p>
- 
-			 <p><label> Skapad mellan åren: <input type='text' name='year1' value='{$this->year1}'/></label>
-			 - <label><input type='text' name='year2' value='{$this->year2}'/></label>
-			 </p> 
-			   <p><input type='submit' name='submit' value='Sök'/></p>
-			   <p><a href='?'>Visa alla</a></p>
+			<p><label>Välj genre:</label> {$this->allGenres}</p>
+			<p><input type='submit' name='submit' value='Sök'/></p>
+			<p><a href='?'>Visa alla</a></p>
 			</fieldset>
-			</form>
+		</form>
 			
 			<div class='dbtable'>
 			  <div class='rows'>{$this->rows} träffar. {$hitsPerPage}</div>
 			  {$table}
 			  <div class='pages'>{$navigatePage}</div>
-			</div>
+			</div>";
+    }
 
-			";
+    public function RenderSingleMovie($id) {
+
+        $movie = $this->getMovieById($id);
+        $imgPath = IMG_PATH . $movie->image;
+        $html = "<div class='movie-single'>";
+        $html .= "<h1>{$movie->title}</h1>";
+        $html .= "<article>";
+        $html .= "<img src='img.php?src={$imgPath}'>";
+        $html .= "<div class='plot'> {$movie->plot} </div>";
+        $html .= "</article></div>";
+
+        return $html;
+    }
+
+    public function RenderSingleMovieAside($id) {
+        $movie = $this->getMovieById($id);
+
+        $imgPath = IMG_PATH . $movie->asideImg;
+        $html = "<div class='singlemovie'>";
+        $html .= "<article>";
+        $html .= "<img src='img.php?src={$imgPath}&amp;width=200&amp;height=260&amp;crop-to-fit'/>";
+        $html .= "<div><h3>Regissör: </h3> {$movie->director} </div>";
+        $html .= "<div><h3>Title: </h3>{$movie->title} </div>";
+        $html .= "<div><h3>Year: </h3>{$movie->length} min</div>";
+        $html .= "<div><h3>Year: </h3>{$movie->year} </div>";
+        $html .= "<div><h3>Text: </h3>{$movie->subtext}</div>";
+        $html .= "<div><h3>Pris: </h3>{$movie->price} </div>";
+
+        $html .= "</article></div>";
+
+        return $html;
+    }
+
+    //Prints the movies gallery style
+    public function RenderMovies() {
+
+        $this->SetVariables();
+        $this->GetAllGenres();
+        $gallery = $this->getMovieGallery();
+        $hitsPerPage = $this->getHitsPerPage(array(2, 4, 8), $this->hits);
+        $navigatePage = $this->getPageNavigation($this->hits, $this->page, $this->max);
+
+        $sqlDebug = $this->db->Dump();
+
+        return "<form>
+                    <fieldset>
+                        <legend>Sök</legend>
+                        <input type=hidden name=genre value='{$this->genre}'/>
+                        <input type=hidden name=hits value='{$this->hits}'/>
+                        <p><label>Välj genre:</label> {$this->allGenres}</p>
+                        <p><a href='?'>Visa alla</a></p>
+                    </fieldset>   
+                </form>
+                <br>
+                <div class='movienav'>
+                    <div class='rows'>
+                        Vi hittade {$this->rows} filmer. {$hitsPerPage} 
+                    </div>
+                    <div class='orderby'>
+                        Sortera på: Titel {$this->orderby('title')}| År{$this->orderby('year')}| Pris{$this->orderby('price')}
+                    </div>
+                </div>
+                <br>
+                    {$gallery} 
+		<div class='pages'>{$navigatePage}</div>";
+    }
+
+    public function RenderThreeLAtest() {
+
+        $sql = "SELECT * FROM movie WHERE published <= NOW() ORDER BY IFNULL(updated,published) DESC LIMIT 3; ";
+        $res = $this->db->ExecuteSelectQueryAndFetchAll($sql);
+
+
+        $container = "<ul class='gallery'>";
+        foreach ($res as $val) {
+
+            $imgPath = IMG_PATH . $val->asideImg;
+            $container .= "<li><a href='movies.php?id={$val->id}'>";
+            $container .= "<figure class='homeMovie'>";
+            $container .= "<img src='img.php?src={$imgPath}&amp;width=200&amp;height=260&amp;crop-to-fit'>";
+            $container .= "<figcaption>{$val->title}</figcaption>";
+            $container .= "</figure>";
+            $container .= "</a></li>";
+        }
+        $container .= "</ul>";
+        return $container;
+    }
+
+    /**
+     * Display error message.
+     *
+     * @param string $message the error message to display.
+     */
+    private function errorMessage($message) {
+        header("Status: 404 Not Found");
+        die('gallery.php says 404 - ' . htmlentities($message));
     }
 
 }

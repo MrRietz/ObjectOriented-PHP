@@ -29,8 +29,6 @@ include(PAGEBURN_INSTALL_PATH . '/src/bootstrap.php');
 session_name(preg_replace('/[:\.\/-_]/', '', __DIR__));
 session_start();
 
-
-
 /** Create the Pageburn variable. 
  * ********************************************************************** */
 $pageburn = array();
@@ -41,31 +39,23 @@ $pageburn['lang'] = 'sv';
 $pageburn['title_append'] = ' | RM Rental Movies';
 
 
-$pageburn['header'] = <<<EOD
-<a href='home.php'>
-    <img class ='sitelogo' src='img/header.png' alt='pageburn Logo'/>        
-</a>      
-EOD;
-
-$pageburn['searchbar'] = <<<EOD
-      <form id='search' action='movies.php'>
-      <p>
-          <label>Sök på titel: <input type='search' name='title' value=''/></label>
-          <input type='submit' name='submit' value='Go'>
-      </p>
-      </form> 
-EOD;
+$pageburn['header'] = null;
 
 $pageburn['sidebarTitle'] = "<h2>News</h2>";
 $pageburn['sidebar'] = <<<EOD
 EOD;
 
 $pageburn['footer'] = <<<EOD
-<footer><span class='sitefooter'>Copyright (c) RM Rental Movies | 
+<div class='well well-sm'>
+<footer class='footer'>
+   <div class="container"> 
+   <div class='text-center'>Copyright (c) RM Rental Movies | 
     <a href='https://github.com/MrRietz/ObjectOriented-PHP/tree/master/PageBurn_5.0'>Pageburn på GitHub</a> | 
     <a href='http://validator.w3.org/unicorn/check?ucn_uri=referer&amp;ucn_task=conformance'>Unicorn</a></span> |
-    <a href='admin.php'>Admin</a></span> |
+    <a href='admin.php'>Admin</a></div> 
+        </div>
 </footer>
+</div>
 EOD;
 
 
@@ -103,20 +93,12 @@ $pageburn['database']['driver_options'] = array(PDO::MYSQL_ATTR_INIT_COMMAND => 
  * ********************************************************************** */
 //$pageburn['navbar'] = null; // To skip the navbar
 $pageburn['navbar'] = array(
-    'class' => 'collapse navbar-collapse',
+    'class' => 'navbar navbar-default',
     'items' => array(
         //this is a menu item
         'hem' => array('text' => 'HEM', 'url' => 'home.php', 'title' => 'Min presentation om mig själv'),
         'filmer' => array('text' => 'FILMER', 'url' => 'movies.php', 'title' => 'Gallery'),
-        'nyheter' => array('text' => 'NYHETER', 'url' => 'news.php', 'title' => 'Vy som visar innehållet',
-            //lets add the submenu here
-            'submenu' => array(
-                //this menu item is part of the submenu
-                'items' => array(
-                    'item 1' => array('text' => 'Reset', 'url' => 'resetDBController.php', 'title' => 'Reset DB'),
-                ),
-            ),
-        ),
+        'nyheter' => array('text' => 'NYHETER', 'url' => 'news.php', 'title' => 'Vy som visar innehållet'),
         'om' => array('text' => 'OM', 'url' => '#.php', 'title' => 'Om'),
     ),
     'callback' => function($url) {
@@ -125,8 +107,7 @@ $pageburn['navbar'] = array(
         }
     }
 );
-
-
+      
 /**
  * Theme related settings.
  * ********************************************************************** */
@@ -139,15 +120,10 @@ $pageburn['favicon'] = 'favicon.ico';
  */
 $pageburn['modernizr'] = 'js/modernizr.js';
 //$pageburn['jquery']     = null; // To disable jQuery
-$pageburn['jquery'] = '//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js';
-$pageburn['javascript_include'] = array();
-//$anax['javascript_include'] = array('js/main.js'); // To add extra javascript files
-
-
-
+$pageburn['jquery'] = 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js';
+$pageburn['javascript_include'] = array('js/pageburn.js', 'js/slideshow.js');
 /**
  * Google analytics.
- *
  */
 $pageburn['google_analytics'] = 'UA-22093351-1'; // Set to null to disable google analytics
 

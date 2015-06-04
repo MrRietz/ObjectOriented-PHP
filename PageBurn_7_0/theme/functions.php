@@ -21,19 +21,13 @@ function get_title($title) {
  * @param string $menu for the navigation bar.
  * @return string as the html for the menu.
 */
-/**
-function get_navbar($menu)
+function echoActiveClassIfRequestMatches($requestUri)
 {
-  $html = "<nav>\n<ul class='{$menu['class']}'>\n";
-  foreach($menu['items'] as $item)
-  {
-    $selected = $menu['callback_selected']($item['url']) ? " class='selected' " : null;
-    $html .= "<li{$selected}><a href='{$item['url']}' title='{$item['title']}'>{$item['text']}</a></li>\n";
-  }
-  $html .= "</ul>\n</nav>\n";
-  return $html;
+    $current_file_name = basename($_SERVER['REQUEST_URI'], ".php");
+
+    if ($current_file_name == $requestUri)
+        echo 'class="active"';
 }
-*/
 
 /**
  * Create a navigation bar / menu, with submenu.
@@ -50,12 +44,33 @@ function get_navbar($menu) {
   );
   $menu = array_replace_recursive($default, $menu);
  
+  $create_menu = function($items, $callback)  {
+  
+  };
  
   // Create the ul li menu from the array, use an anonomous recursive function that returns an array of values.
   $create_menu = function($items, $callback) use (&$create_menu) {
     $html = null;
     $hasItemIsSelected = false;
- 
+    $navbarHeader = "<div class='navbar-header'>
+          <button type='button' class='navbar-toggle collapsed' data-toggle='collapse' data-target='#rmNavbar'>
+            <span class='sr-only'>Toggle navigation</span>
+            <span class='icon-bar'></span>
+            <span class='icon-bar'></span>
+            <span class='icon-bar'></span>
+          </button>
+          <a class='navbar-brand' href='home.php'>
+           <img class ='sitelogo' src='img/header.png' alt='pageburn Logo'/> RM Rental Movies    
+         </a>    
+        </div>";
+    $navbarSearchBar = "<form class='navbar-form navbar-left' role='search'>
+         
+            <div class='form-group'>
+              <input class='form-control' placeholder='Sök på titel...' type='search' name='title' value=''>
+                      </div>
+                    <button type='submit' class='btn btn-default'>Sök</button>
+    
+          </form>"; 
     foreach($items as $item) {
  
       // has submenu, call recursivly and keep track on if the submenu has a selected item in it.
@@ -64,12 +79,12 @@ function get_navbar($menu) {
    
       if(isset($item['submenu'])) 
       {
-        list($submenu, $selectedParent) = $create_menu($item['submenu']['items'], $callback);
-        $selectedParent = $selectedParent ? " selected-parent" : null;
+        list($submenu, $selectedParent) = array("<li class='dropdown'>", $callback);
+        $selectedParent = $selectedParent ? " active" : null;
      
       }
       // Check if the current menuitem is selected
-      $selected = $callback($item['url']) ? 'selected' : null;
+      $selected = $callback($item['url']) ? 'active' : null;
       if($selected) {
         $hasItemIsSelected = true;
       }
@@ -77,7 +92,7 @@ function get_navbar($menu) {
       $html .= "\n<li{$selected}><a href='{$item['url']}' title='{$item['title']}'>{$item['text']}</a>{$submenu}</li>\n";
     }
  
-    return array("\n<ul>$html</ul>\n", $hasItemIsSelected);
+    return array("\n<div class='container-fluid'>$navbarHeader<div class='collapse navbar-collapse' id='rmNavbar'><ul class='nav navbar-nav'>$html</ul>$navbarSearchBar</div></div>\n", $hasItemIsSelected);
   };
  
   // Call the anonomous function to create the menu, and submenues if any.

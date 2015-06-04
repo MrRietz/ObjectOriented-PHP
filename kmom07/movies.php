@@ -14,13 +14,7 @@ define('IMG_PATH', '../img/movies/');
 
 $db = new CDatabase($pageburn['database']);
 $movies = new CMovies($db);  
-
-
-
-
-
-
-  
+ 
 if(isset($_GET['id'])) {
     
     $movieTitle = $movies->getMovieById($_GET['id']); 
@@ -29,7 +23,7 @@ if(isset($_GET['id'])) {
         
     {$movies->RenderSingleMovie($_GET['id'])}
 EOD;
-    $pageburn['sidebarTitle'] =  "<h2> {$pageburn['title']} </h2>"; 
+    $pageburn['sidebarTitle'] =  "Om Filmen"; 
     $pageburn['sidebar'] = <<<EOD
         
     {$movies->RenderSingleMovieAside($_GET['id'])}
@@ -38,17 +32,15 @@ EOD;
 
 } else {
 
-    $pageburn['title'] = "Våra Filmer";         
+    $pageburn['title'] = "Filmer";         
     $pageburn['main'] = <<<EOD
-
-    <h1>{$pageburn['title']}</h1>
     {$movies->RenderMovies()}
 EOD;
 $blog = new CBlog($db);
 
 $res = $blog->getHomePosts(); 
 
-$pageburn['sidebarTitle'] = "<h2>Senaste News</h2>";
+$pageburn['sidebarTitle'] = "Senaste Nyheter";
 
 if (isset($res[0])) {
     

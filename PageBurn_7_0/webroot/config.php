@@ -72,10 +72,10 @@ $pageburn['favicon']    = 'favicon.ico';
  *
  */
 $pageburn['modernizr'] = 'js/modernizr.js';
-$pageburn['jquery'] = '//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js';
+$pageburn['jquery'] = 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js';
 
 $pageburn['javascript_include'] = array();
-//$anax['javascript_include'] = array('js/main.js'); // To add extra javascript files
+
 
 /**
  * Google analytics.

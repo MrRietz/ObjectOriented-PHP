@@ -9,37 +9,9 @@ include(__DIR__.'/config.php');
 // Connect to a MySQL database using PHP PDO
 $db = new CDatabase($pageburn['database']);
 $fileUpload = new CFileUpload(); 
+$movies = new CMovies($db); 
 
-
-
-// Get parameters 
-$title  = isset($_POST['title']) ? strip_tags($_POST['title']) : null;
-$title  = isset($_POST['director']) ? strip_tags($_POST['director']) : null;
-$title  = isset($_POST['year']) ? strip_tags($_POST['year']) : null;
-$title  = isset($_POST['image']) ? strip_tags($_POST['image']) : null;
-$title  = isset($_POST['subtext']) ? strip_tags($_POST['title']) : null;
-$title  = isset($_POST['title']) ? strip_tags($_POST['title']) : null;
-$title  = isset($_POST['title']) ? strip_tags($_POST['title']) : null;
-$create = isset($_POST['create'])  ? true : false;
-$acronym = isset($_SESSION['user']) ? $_SESSION['user']->acronym : null;
-
-// Check that incoming parameters are valid
-isset($acronym) or die('Check: You must login to edit.');
-
-// Check if form was submitted
-if($create) {
-  $sql = 'INSERT INTO Movie (title, director, year, image, subtext, speech, asideImg, price, published, created, updated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), NOW())';
-
-  $db->ExecuteQuery($sql);
-  $db->SaveDebug();
-  
-  $fileUpload->uploadFile('image');
-  $fileUpload->uploadFile('asideImg');
-  //header('Location: movie_edit.php?id=' . $db->LastInsertId());
-  exit;
-}
-
-
+$movies->insertContent($fileUpload); 
 
 // Do it and store it all in variables in the Anax container.
 $pageburn['title'] = "Skapa ny film";
@@ -47,22 +19,27 @@ $pageburn['title'] = "Skapa ny film";
 $sqlDebug = $db->Dump();
 
 $pageburn['main'] = <<<EOD
-<h1>{$pageburn['title']}</h1>
 
 <form method=post enctype="multipart/form-data">
   <fieldset>
-  <legend>Skapa ny film</legend>
-  <p><label>Titel:<br/><input type='text' name='title'/></label></p>
-  <p><label>Regissör:<br/><input type='text' name='director'/></label></p>
-  <p><label>Årtal:<br/><input type='text' name='year'/></label></p>
-  <p><label>Subs:<br/><input type='text' name='subtext'/></label></p>
-  <p><label>Tal:<br/><input type='text' name='speech'/></label></p>
-  <p><label>Pris:<br/><input type='text' name='price'/></label></p>
-
-
-  <p>Bild1:<input type="file" name="image" id="uploadfile"></p>
-  <p>Bild2:<input type="file" name="asideImg" id="uploadfile"></p>
-  <p><input type='submit' name='create' value='Skapa'/></p>
+  <div class='col-xs-12 col-sm-12 col-md-6 col-lg-4'>
+    <label class='control-label'>Titel: </label><input class='form-control' type='text'     name='title'/>
+    <label class='control-label'>Regissör: </label><input class='form-control' type='text'  name='director'/>
+    <label class='control-label'>Längd i minuter: </label><input class='form-control' type='number'   name='length'/>
+    <label class='control-label'>Årtal: </label><input class='form-control' type='number'   name='year'/>
+    <label class='control-label'>Subs: </label><input class='form-control' type='text'      name='subtext'/>
+    <label class='control-label'>Språk: </label><input class='form-control' type='text'     name='speech'/>
+    <label class='control-label'>Pris: </label><input class='form-control' type='number'    name='price'/>
+    <label class='control-label'>Youtube: </label><input class='form-control' type='url'    name='youtubelink'/>
+    <label class='control-label'>IMDB: </label><input class='form-control' type='url'       name='imdblink'/>      
+ </div>
+ <div class='col-xs-12 col-sm-12 col-md-6 col-lg-4'>
+    <label class='control-label'>Handling: </label><textarea rows='6' cols='50' class='form-control' name='plot'/></textarea>
+    <label class='control-label'>Huvudbild 1: </label><input class='form-control' type="file" name="image" id="uploadfile">
+    <label class='control-label'>Huvudbild 2: </label><input class='form-control' type="file" name="image1" id="uploadfile">
+    <label class='control-label'>Details Image: </label><input class='form-control' type="file" name="asideImg" id="uploadfile">
+    <input class='btn btn-primary' type='submit' name='create' value='Skapa'/>
+  </div>
   </fieldset>
 </form>
 

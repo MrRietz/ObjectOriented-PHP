@@ -1,23 +1,22 @@
 'use strict';
 
-var gulp = require('gulp'),
+var gulp = require('gulp'), 
+    less = require('gulp-less'),  
+    changed = require('gulp-changed'),
     mainBowerFiles = require('main-bower-files'),
-    less = require('gulp-less'),
-    src = './src/main/webapp',
     browserSync = require('browser-sync'),
     browserSyncConfig = {
         proxy: "localhost",
         startPath: "/oophp/kmom07/home.php"
+    },
+    views = {
+        classesSrcPath: '/src/source/**/*.php',
+        projectSrcPath: '../kmom07/source/*.php',
+        classesTargetPath: '/src/**/*.php',
+        projectTargetPath: '../kmom07/*.php'
     };
-//    views = {
-//        src: src + "/WEB-INF/view/**/*",
-//        dest: dest + "/WEB-INF/view"
-//    };
     
 
- /* This task builds a stream with all files defined in the main property of the 
-  * dependencies’ bower.json and copies it to public/lib folder. Here is what 
-  */
 gulp.task('mainBowerFiles', function moveBowerDeps() {
   return gulp.src(mainBowerFiles(), { base: 'bower_components' })
       .pipe(gulp.dest('webroot/lib'));
@@ -35,7 +34,19 @@ gulp.task('bootstrap:compileLess', ['bootstrap:prepareLess'], function bootstrap
       .pipe(gulp.dest('../kmom07/css')); //change this if you want the css file to another project. 
 });
 
+gulp.task('classes', function()  {
+  return gulp.src(views.classesTargetPath)
+        .pipe(changed(views.classesTargetPath)) // Ignore unchanged files
+        .pipe(gulp.dest(views.classesTargetPath))
+        .pipe(browserSync.reload({stream:true}));
+});
 
+gulp.task('project', function()  {
+  return gulp.src(views.projectTargetPath)
+        .pipe(changed(views.projectTargetPath)) // Ignore unchanged files
+        .pipe(gulp.dest(views.projectTargetPath))
+        .pipe(browserSync.reload({stream:true}));
+});
           
 gulp.task('browserSync', function() {
   browserSync(browserSyncConfig);
@@ -43,7 +54,11 @@ gulp.task('browserSync', function() {
 
 gulp.task('watch', ['bootstrap:compileLess', 'browserSync'], function watch() {
   gulp.watch(['less/bootstrap/variables.less'], ['bootstrap:compileLess']);
-//  gulp.watch(config.views.src, ['views']);
+    console.log("Starting watch");
+  gulp.watch(views.classesSrcPath, ['classes']);
+  gulp.watch(views.projectSrcPath, ['project']);
+  browserSync.reload({stream:true});
+  console.log("Done");
 });
 
 

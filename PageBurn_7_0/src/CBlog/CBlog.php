@@ -52,18 +52,12 @@ class CBlog extends CContent {
     public function renderHTML($c) {
         $editLink = $this->isAdmin ? "<a href='editController.php?id={$c->id}'>Uppdatera sidan</a>" : null;
         $html = null; 
-        $html .= "<section class='blogpost'>";
-        $html .= "<article>";
-        $html .= "<header>";
-        $html .= "<h1><a href='news.php?slug={$this->slug}'>{$this->title}</a></h1>";
-        $html .= "</header>";
-        $html .= "<div id='newscontent'>{$this->data}</div>";
-        $html .= "<footer>";
+        $html .= "<div class='panel panel-info'>";
+        $html .= "<div class='panel-heading'><h3 class='panel-title'><a href='news.php?slug={$this->slug}'>{$this->title}</a></h3></div>";
+        $html .= "<div class='panel-body' id='newscontent'>{$this->data}</div>";
+        $html .= "<div class='panel-footer'>";
         $html .= "Published: {$this->published}";
-        $html .= "{$editLink}";
-        $html .= "</footer>";
-        $html .= "</article>";
-        $html .= "</section>";
+        $html .= "{$editLink} </div></div>";
         return $html;
     }
     

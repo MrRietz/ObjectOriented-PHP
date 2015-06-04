@@ -3,7 +3,6 @@
 class CMovies {
 
     private $db = null;
-    private $title = null;
     private $genre = null;
     private $allGenres = null;
     private $hits = 8;
@@ -15,9 +14,39 @@ class CMovies {
     private $order = 'asc';
     private $max = 0;
     private $rows = 0;
+    
+    private $title  =    null;  
+    private $director  =   null;
+    private $length  =     0;
+    private $year  =    0;   
+    private $plot =     null;   
+    private $subtext  =   null; 
+    private $speech  =     null;
+    private $price  =      0;
+    private $youtubelink = null;
+    private $image  =      null;
+    private $image1  =     null;
+    private $asideImg  =   null;
+    private $create =      null;
+    private $acronym =     null;
 
     public function __construct($database) {
         $this->db = $database;
+        $this->title  =       isset($_POST['title']) ? strip_tags($_POST['title']) : null;
+        $this->director  =    isset($_POST['director']) ? strip_tags($_POST['director']) : null;
+        $this->length  =      isset($_POST['length']) ? strip_tags($_POST['length']) : null;
+        $this->year  =        isset($_POST['year']) ? strip_tags($_POST['year']) : null;
+        $this->plot =         isset($_POST['plot']) ? strip_tags($_POST['plot']) : null;
+        $this->subtext  =     isset($_POST['subtext']) ? strip_tags($_POST['subtext']) : null;
+        $this->speech  =      isset($_POST['speech']) ? strip_tags($_POST['speech']) : null;
+        $this->price  =       isset($_POST['price']) ? strip_tags($_POST['price']) : null;
+        $this->youtubelink =  isset($_POST['youtubelink']) ? strip_tags($_POST['youtubelink']) : null;
+        $this->imdblink =     isset($_POST['imdblink']) ? strip_tags($_POST['imdblink']) : null;
+        $this->image  =       isset($_POST['image']) ? strip_tags($_POST['image']) : null;
+        $this->image1  =      isset($_POST['image1']) ? strip_tags($_POST['image1']) : null;
+        $this->asideImg  =    isset($_POST['asideImg']) ? strip_tags($_POST['asideImg']) : null;
+        $this->create =       isset($_POST['create'])  ? true : false;
+        $this->acronym =      isset($_SESSION['user']) ? $_SESSION['user']->acronym : null;
     }
 
     private function SetVariables() {
@@ -43,7 +72,7 @@ class CMovies {
         }
     }
 
-    public function GetAllGenres() {
+    public function GetAllGenres($isHome) {
         // Get all genres that are active
         $sql = '
 		  SELECT DISTINCT G.name
@@ -53,33 +82,19 @@ class CMovies {
 		';
         $res = $this->db->ExecuteSelectQueryAndFetchAll($sql);
 
+        $this->allGenres .= "<div class='btn-group' role='group' aria-label='...'>"; 
         foreach ($res as $val) {
             if ($val->name == $this->genre) {
-                $this->allGenres .= "$val->name ";
+                $this->allGenres .= "<a class='btn btn-default active'>$val->name</a>";
             } else {
-                $this->allGenres .= "<a href='" . $this->getQueryString(array('genre' => $val->name)) . "'>{$val->name}</a> ";
+                if($isHome) {
+                    $this->allGenres .= "<a class='btn btn-default' href='movies.php" . $this->getQueryString(array('genre' => $val->name)) . "'>{$val->name}</a> ";
+                } else {
+                    $this->allGenres .= "<a class='btn btn-default' href='" . $this->getQueryString(array('genre' => $val->name)) . "'>{$val->name}</a> ";
+                }
             }
         }
-        return $this->allGenres;
-    }
-
-    public function GetAllGenresHome() {
-        // Get all genres that are active
-        $sql = '
-		  SELECT DISTINCT G.name
-		  FROM Genre AS G
-		    INNER JOIN Movie2Genre AS M2G
-		      ON G.id = M2G.idGenre
-		';
-        $res = $this->db->ExecuteSelectQueryAndFetchAll($sql);
-
-        foreach ($res as $val) {
-            if ($val->name == $this->genre) {
-                $this->allGenres .= "$val->name ";
-            } else {
-                $this->allGenres .= "<a href='movies.php" . $this->getQueryString(array('genre' => $val->name)) . "'>{$val->name}</a> ";
-            }
-        }
+        $this->allGenres .= "</div>"; 
         return $this->allGenres;
     }
 
@@ -200,18 +215,23 @@ class CMovies {
 
         $res = $this->GetMoviesFromDB();
 
-        $container = "<ul class='gallery'>";
-
+        $container = "<div class='well'><div class='row'>";
         foreach ($res as $val) {
 
             $imgPath = IMG_PATH . $val->image;
-            $item = "<img src='img.php?src={$imgPath}&amp;width=200&amp;height=260&amp;crop-to-fit'/>";
+            $item = "<img src='img.php?src={$imgPath}&amp;width=400&amp;height=260&amp;crop-to-fit'/>";
 
-            $container .= "<li><a href='?id={$val->id}' title='{$val->title}'>"
-                    . "<figure>{$item}<figcaption><span>{$val->title}</span>"
-                    . " ({$val->year})<br>{$val->price} kr</figcaption></figure></a></li>";
+            $container .= "<div class='col-sm-6 col-md-4'>"
+                    . "<a href='?id={$val->id}' title='{$val->title}'>"
+                    . "<div class='thumbnail text-center'>"
+                    . "{$item}"
+                    . "<div class='caption'>{$val->title}"
+                    . " ({$val->year})</a>"
+                    . " <br><label for='price'><h4>Pris: </h4></label> {$val->price} kr"
+                    . "<p><a href='#' class='btn btn-primary' role='button'>Youtube</a> <a href='#' class='btn btn-default' role='button'>IMDB</a></p>"
+                    . "</div></div></div>";
         }
-        $container .= "</ul>";
+        $container .= "</div></div>";
 
         return $container;
     }
@@ -246,16 +266,15 @@ class CMovies {
         $nav = "Träffar per sida: ";
         foreach ($hits AS $val) {
             if ($current == $val) {
-                $nav .= "$val ";
+                $nav .= "<a class='btn btn-xs btn-primary active'>$val </a> ";
             } else {
-                $nav .= "<a href='" . $this->getQueryString(array('hits' => $val)) . "'>$val</a> ";
+                $nav .= "<a class='btn btn-xs btn-default' href='" . $this->getQueryString(array('hits' => $val,'page' => 1)) . "'>$val</a> ";
             }
         }
         return $nav;
     }
-
     /**
-     * Create navigation among pages.
+     * Create bootstrap navigation among pages.
      *
      * @param integer $hits per page.
      * @param integer $page current page.
@@ -264,19 +283,19 @@ class CMovies {
      * @return string as a link to this page.
      */
     private function getPageNavigation($hits, $page, $max, $min = 1) {
-        $nav = ($page != $min) ? "<a href='" . $this->getQueryString(array('page' => $min)) . "'>&lt;&lt;</a> " : '&lt;&lt; ';
-        $nav .= ($page > $min) ? "<a href='" . $this->getQueryString(array('page' => ($page > $min ? $page - 1 : $min))) . "'>&lt;</a> " : '&lt; ';
+        $nav = ($page != $min) ? "<li><a aria-label='First' href='" . $this->getQueryString(array('page' => $min)) . "'>First</a></li>" : "<li class='disabled'><a href='#' aria-label='First'>First</a></li>";
+        $nav .= ($page > $min) ? "<li><a aria-label='Previous' href='" . $this->getQueryString(array('page' => ($page > $min ? $page - 1 : $min))) . "'><span aria-hidden='false'>&laquo;</span></a></li> " : "<li class='disabled'><a href='#' aria-label='Previous'><span aria-hidden='true'>&laquo;</span></a></li>";
 
         for ($i = $min; $i <= $max; $i++) {
             if ($page == $i) {
-                $nav .= "$i ";
+                $nav .= "<li class='active'><a href='#'>{$i}</a></li>";
             } else {
-                $nav .= "<a href='" . $this->getQueryString(array('page' => $i)) . "'>$i</a> ";
+                $nav .= "<li><a href='" . $this->getQueryString(array('page' => $i)) . "'>$i</a></li> ";
             }
         }
 
-        $nav .= ($page < $max) ? "<a href='" . $this->getQueryString(array('page' => ($page < $max ? $page + 1 : $max))) . "'>&gt;</a> " : '&gt; ';
-        $nav .= ($page != $max) ? "<a href='" . $this->getQueryString(array('page' => $max)) . "'>&gt;&gt;</a> " : '&gt;&gt; ';
+        $nav .= ($page < $max) ? "<li><a aria-label='Next' href='" . $this->getQueryString(array('page' => ($page < $max ? $page + 1 : $max))) . "'><span aria-hidden='true'>&raquo;</span></a></li> " : "<li class='disabled'><a href='#' aria-label='Next'><span aria-hidden='true'>&raquo;</span></a></li>";
+        $nav .= ($page != $max) ? "<li><a aria-label='Last' href='" . $this->getQueryString(array('page' => $max)) . "'>Last</a></li>" : "<li class='disabled'><a href='#' aria-label='Last'>Last</a></li>";
         return $nav;
     }
 
@@ -287,8 +306,8 @@ class CMovies {
      * @return string with links to order by column.
      */
     private function orderby($column) {
-        $nav = "<a href='" . $this->getQueryString(array('orderby' => $column, 'order' => 'asc')) . "'>&or;      </a>";
-        $nav .= "<a href='" . $this->getQueryString(array('orderby' => $column, 'order' => 'desc')) . "'>&and;</a>";
+        $nav = "<a class='btn btn-xs btn-default' href='" . $this->getQueryString(array('orderby' => $column, 'order' => 'asc')) . "'>&or;      </a>";
+        $nav .= "<a class='btn btn-xs btn-default' href='" . $this->getQueryString(array('orderby' => $column, 'order' => 'desc')) . "'>&and;</a>";
         return "<span class='orderby'>" . $nav . "</span>";
     }
 
@@ -319,17 +338,53 @@ class CMovies {
 			  <div class='pages'>{$navigatePage}</div>
 			</div>";
     }
+    public function getMovieModal($title, $youtubeURL) {
+        $modal = "<!-- Button trigger modal -->
+        <button type='button' class='btn btn-primary' data-toggle='modal' data-target='#myModal'>
+          Se Trailer
+        </button>
 
+        <!-- Modal -->
+        <div class='modal fade' id='myModal' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
+          <div class='modal-dialog modal-lg'>
+            <div class='modal-content'>
+              <div class='modal-header'>
+                <button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+                <h4 class='modal-title' id='myModalLabel'>Trailer for {$title}</h4>
+              </div>
+              <div class='modal-body'>
+                <div class='embed-responsive embed-responsive-16by9'><iframe class='embed-responsive-item' src='{$youtubeURL}'allowfullscreen></iframe></div>
+              </div>
+              <div class='modal-footer'>
+                <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>
+              </div>
+            </div>
+          </div>
+        </div>"; 
+        return $modal; 
+    }
     public function RenderSingleMovie($id) {
-
         $movie = $this->getMovieById($id);
         $imgPath = IMG_PATH . $movie->image;
-        $html = "<div class='movie-single'>";
-        $html .= "<h1>{$movie->title}</h1>";
-        $html .= "<article>";
-        $html .= "<img src='img.php?src={$imgPath}'>";
-        $html .= "<div class='plot'> {$movie->plot} </div>";
-        $html .= "</article></div>";
+        $modal = $this->getMovieModal($movie->title, "//www.youtube.com/embed/s7EdQ4FqbhY"); 
+        $html = "<div class='well'>
+        <article>
+        <div class='row'>
+        <div class='col-xs-6 col-md-3'>
+          <a href='img.php?src={$imgPath}' class='thumbnail'>
+          <img src='img.php?src={$imgPath}'>
+          </a>
+        </div>
+        <div class='col-xs-6 col-md-3'>
+          <a href='img.php?src={$imgPath}' class='thumbnail'>
+          <img src='img.php?src={$imgPath}'>
+          </a>
+        </div>
+        </div>
+
+        <div class='plot'> {$movie->plot} </div>
+            {$modal}
+        </article></div>";
 
         return $html;
     }
@@ -357,57 +412,114 @@ class CMovies {
     public function RenderMovies() {
 
         $this->SetVariables();
-        $this->GetAllGenres();
+        $this->GetAllGenres(false);
         $gallery = $this->getMovieGallery();
         $hitsPerPage = $this->getHitsPerPage(array(2, 4, 8), $this->hits);
         $navigatePage = $this->getPageNavigation($this->hits, $this->page, $this->max);
 
         $sqlDebug = $this->db->Dump();
 
-        return "<form>
-                    <fieldset>
-                        <legend>Sök</legend>
-                        <input type=hidden name=genre value='{$this->genre}'/>
-                        <input type=hidden name=hits value='{$this->hits}'/>
-                        <p><label>Välj genre:</label> {$this->allGenres}</p>
-                        <p><a href='?'>Visa alla</a></p>
-                    </fieldset>   
-                </form>
-                <br>
-                <div class='movienav'>
-                    <div class='rows'>
-                        Vi hittade {$this->rows} filmer. {$hitsPerPage} 
-                    </div>
-                    <div class='orderby'>
-                        Sortera på: Titel {$this->orderby('title')}| År{$this->orderby('year')}| Pris{$this->orderby('price')}
-                    </div>
+        return "
+        <div class='row'><form>
+        <fieldset>
+            <input type=hidden name=genre value='{$this->genre}'/>
+            <input type=hidden name=hits value='{$this->hits}'/>
+         <div class=col-md-12><label><h4>Välj genre: </h4></label> {$this->allGenres}</div>        
+        </fieldset>   
+        </form>
+        </div>
+        <br>
+        <div class='well well-sm'><div class='row'>
+            <div class='col-md-6'>
+                Vi hittade {$this->rows} filmer. {$hitsPerPage} 
+            </div>
+            <div class='col-md-6'>
+                <div class='pull-right'>
+                    Sortera på Titel: {$this->orderby('title')} År: {$this->orderby('year')} Pris: {$this->orderby('price')}
                 </div>
-                <br>
-                    {$gallery} 
-		<div class='pages'>{$navigatePage}</div>";
+            </div>
+        </div></div>
+            {$gallery} 
+        <nav class='text-center'>
+        <ul class='pagination pagination-md'>
+          {$navigatePage}
+        </ul>
+      </nav>";
     }
 
     public function RenderThreeLAtest() {
 
         $sql = "SELECT * FROM movie WHERE published <= NOW() ORDER BY IFNULL(updated,published) DESC LIMIT 3; ";
         $res = $this->db->ExecuteSelectQueryAndFetchAll($sql);
-
-
-        $container = "<ul class='gallery'>";
+  
+        $container = "<div class='row'>";
         foreach ($res as $val) {
-
             $imgPath = IMG_PATH . $val->asideImg;
-            $container .= "<li><a href='movies.php?id={$val->id}'>";
-            $container .= "<figure class='homeMovie'>";
-            $container .= "<img src='img.php?src={$imgPath}&amp;width=200&amp;height=260&amp;crop-to-fit'>";
-            $container .= "<figcaption>{$val->title}</figcaption>";
-            $container .= "</figure>";
-            $container .= "</a></li>";
+            $modal = $this->getMovieModal($val->title, "//www.youtube.com/embed/s7EdQ4FqbhY"); 
+            $container .= "<div class='col-sm-6 col-md-4'>";
+            $container .= "<div class='thumbnail text-center'>";
+            $container .= "<img src='img.php?src={$imgPath}&amp;width=400&amp;height=260&amp;crop-to-fit'>";
+            $container .= " <div class='caption'>";
+            $container .= "<h3><a href='movies.php?id={$val->id}'>{$val->title}</a></h3>";
+            $container .= "{$modal}<a href='#' class='btn btn-default' role='button'>IMDB</a>";
+            $container .= " </div></div></div>";
         }
-        $container .= "</ul>";
+        $container .= "</div>";
         return $container;
     }
 
+    public function insertContent($fileUpload) {
+         $output = null;
+        isset($this->acronym) or die('Check: You must login to edit.');
+        if ($this->create) {
+              $sql = 'INSERT INTO Movie(
+                title, 
+                director, 
+                length, 
+                year, 
+                plot, 
+                image, 
+                image1, 
+                subtext, 
+                speech, 
+                asideImg, 
+                price, 
+                youtubelink, 
+                imdblink, 
+                published, 
+                created,
+                updated) 
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(), NOW(), NOW())';
+            
+            $url = empty($url) ? null : $url;
+            $params = array(
+                $this->title, 
+                $this->director, 
+                $this->length, 
+                $this->year, 
+                $this->plot, 
+                $this->image, 
+                $this->image1, 
+                $this->subtext, 
+                $this->speech,
+                $this->asideImg, 
+                $this->price, 
+                $this->youtubelink,
+                $this->imdblink);
+            $res = $this->db->ExecuteQuery($sql, $params);
+            if ($res) {
+                          
+                $fileUpload->uploadFile('image');
+                $fileUpload->uploadFile('image1');
+                $fileUpload->uploadFile('asideImg');
+//                header('Location: admin.php');
+            } else {
+                $output = 'Informationen EJ tillagd.<br><pre>' . print_r($this->db->Dump(), 1) . '</pre>';
+            }
+        }
+
+        return $output; 
+    }
     /**
      * Display error message.
      *

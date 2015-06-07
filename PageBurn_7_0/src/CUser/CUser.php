@@ -3,7 +3,7 @@
 class CUser
 {
 	private $db  = null;  
-	private $acronym = null;  
+	private $acronym = "";  
 	
 	public function __construct($database)
 	{
@@ -11,7 +11,7 @@ class CUser
 	}
 	public function IsAuthenticated()
 	{
-		$this->acronym = isset($_SESSION['user']) ? $_SESSION['user']->acronym : null;
+		$this->acronym = isset($_SESSION['user']) ? $_SESSION['user']->acronym : "";
 		if($this->acronym)
 		{
 			return true;//"Välkommen $acronym ({$_SESSION['user']->name}) du är nu inloggad"; 
@@ -39,10 +39,10 @@ class CUser
         }
         public function GetAcronym()
         {
-        	return $this->acronym; 
+              return $this->acronym; 
         }
         public function GetName() 
         {
         	return $_SESSION['user']->name; 
-        }	
+        }
 }

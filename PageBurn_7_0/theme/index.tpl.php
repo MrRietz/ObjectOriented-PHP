@@ -43,9 +43,6 @@
                         <h3 class="panel-title"> <?= $sidebarTitle ?></h3>
                       </div>
                       <div class="panel-body">
-                          <?php if (isset($sidenav)): ?>
-                              <?= get_navbar($sidenav) ?> 
-                          <?php endif; ?>
                           <?= $sidebar ?>
                       </div>
                     </div>

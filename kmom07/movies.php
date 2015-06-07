@@ -5,9 +5,6 @@
  */
 // Include the essential config-file which also creates the $pageburn variable with its defaults.
 include(__DIR__.'/config.php'); 
-$pageburn['stylesheets'][] = 'css/figure.css'; 
-$pageburn['stylesheets'][] = 'css/gallery.css'; 
-$pageburn['stylesheets'][] = 'css/breadcrumb.css'; 
 
 define('IMG_PATH', '../img/movies/');
 
@@ -17,11 +14,11 @@ $movies = new CMovies($db);
  
 if(isset($_GET['id'])) {
     
-    $movieTitle = $movies->getMovieById($_GET['id']); 
-    $pageburn['title'] = $movieTitle->title;   
+    $movie = $movies->getMovieById($_GET['id']); 
+    $pageburn['title'] = $movie->title . " (" . $movie->year . ")" ;   
     $pageburn['main'] = <<<EOD
         
-    {$movies->RenderSingleMovie($_GET['id'])}
+    {$movies->RenderSingleMovie($movie)}
 EOD;
     $pageburn['sidebarTitle'] =  "Om Filmen"; 
     $pageburn['sidebar'] = <<<EOD
@@ -46,7 +43,7 @@ if (isset($res[0])) {
     
     foreach ($res as $content) {
         $blog->sanitizeVariables($content);
-        $pageburn['sidebar'] .=  $blog->renderHTML($content);
+        $pageburn['sidebar'] .=  $blog->renderHTML($content, true);
     }
 }
 }

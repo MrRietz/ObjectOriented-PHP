@@ -10,39 +10,26 @@ include(__DIR__ . '/config.php');
 // Connect to a MySQL database using PHP PDO
 $db = new CDatabase($pageburn['database']);
 $blog = new CBlog($db);
+$pageburn['sidebarTitle'] = "Välj genre";
+$pageburn['sidebar'] = <<<EOD
+    {$blog->getGenreList()}
+EOD;
 
-
-$pageburn['title'] = "Bloggen";
+$pageburn['title'] = "Nyheter - Alla";
 $pageburn['debug'] = $db->Dump();
-
+ 
 $pageburn['main'] = null;
+if (isset($_GET['genre'])) {
+    $pageburn['title'] = "Nyheter";
 
-$res = $blog->getPosts();
+    $pageburn['main'] = $blog->getPostsByGenre();
 
-
-
-
-$pageburn['main'] = null;
-if (isset($res[0])) {
+} else if (isset($_GET['slug'])) {
     
-    foreach ($res as $content) {
-        $blog->sanitizeVariables($content);
-        if ($content->slug) {
-            $pageburn['title'] = "$content->title | " . $pageburn['title'];
-        }
-
-        $pageburn['main'] .= <<<EOD
-        {$blog->renderHTML($content)}
-EOD;
-    }
-    $pageburn['main'] .= <<<EOD
-    <a href='addNewController.php'>Lägg till ny.</a></p>
-EOD;
+    $pageburn['main'] = $blog->getPostBySlug();
     
-} else if ($slug) {
-    $pageburn['main'] = "Det fanns inte en sådan bloggpost.";
 } else {
-    $pageburn['main'] = "Det fanns inga bloggposter.";
+    $pageburn['main'] = $blog->getAllPosts();
 }
 
 

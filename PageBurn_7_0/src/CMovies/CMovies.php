@@ -14,6 +14,7 @@ class CMovies {
     private $order = 'asc';
     private $max = 0;
     private $rows = 0;
+    private $target_dir = 'img/movies/';
     
     private $title  =    null;  
     private $director  =   null;
@@ -26,8 +27,11 @@ class CMovies {
     private $youtubelink = null;
     private $image  =      null;
     private $image1  =     null;
-    private $asideImg  =   null;
+    private $image2  =   null;
     private $create =      null;
+    private $update =      null; 
+    private $remove =      null; 
+    private $noRemove = null; 
     private $acronym =     null;
 
     public function __construct($database) {
@@ -42,10 +46,11 @@ class CMovies {
         $this->price  =       isset($_POST['price']) ? strip_tags($_POST['price']) : null;
         $this->youtubelink =  isset($_POST['youtubelink']) ? strip_tags($_POST['youtubelink']) : null;
         $this->imdblink =     isset($_POST['imdblink']) ? strip_tags($_POST['imdblink']) : null;
-        $this->image  =       isset($_POST['image']) ? strip_tags($_POST['image']) : null;
-        $this->image1  =      isset($_POST['image1']) ? strip_tags($_POST['image1']) : null;
-        $this->asideImg  =    isset($_POST['asideImg']) ? strip_tags($_POST['asideImg']) : null;
+
         $this->create =       isset($_POST['create'])  ? true : false;
+        $this->update =       isset($_POST['update'])  ? true : false;
+        $this->remove =       isset($_POST['remove'])  ? true : false;
+        $this->noRemove =     isset($_POST['noRemove'])  ? true : false;
         $this->acronym =      isset($_SESSION['user']) ? $_SESSION['user']->acronym : null;
     }
 
@@ -71,18 +76,104 @@ class CMovies {
             return null;
         }
     }
+    
+    public function GetInsertForm() {
+        $sql = 'SELECT * FROM Genre'; 
+        $checkBoxes = "<label class='control-label'>Genre: </label>"; 
+        $res = $this->db->ExecuteSelectQueryAndFetchAll($sql);
+        foreach($res as $val) {
+            $checkBoxes .= "<div class='checkbox'>
+                        <label><input name='genres[]' type='checkbox' value='{$val->id}'>{$val->name}</label>
+                       </div>"; 
+        }
+        $output = "<form method=post enctype='multipart/form-data'>
+          <fieldset>
+            <div class='col-xs-12 col-sm-12 col-md-6 col-lg-4'>
+              <label class='control-label'>Titel: </label><input class='form-control' type='text'     name='title'/>
+              <label class='control-label'>Regissör: </label><input class='form-control' type='text'  name='director'/>
+              <label class='control-label'>Längd i minuter: </label><input class='form-control' type='number'   name='length'/>
+              <label class='control-label'>Årtal: </label><input class='form-control' type='number'   name='year'/>
+              <label class='control-label'>Subs: </label><input class='form-control' type='text'      name='subtext'/>
+              <label class='control-label'>Språk: </label><input class='form-control' type='text'     name='speech'/>
+              <label class='control-label'>Pris: </label><input class='form-control' type='number'    name='price'/>
+              <label class='control-label'>Youtube: </label><input class='form-control' type='url'    name='youtubelink'/>
+              <label class='control-label'>IMDB: </label><input class='form-control' type='url'       name='imdblink'/>      
+           </div>
+           <div class='col-xs-12 col-sm-12 col-md-6 col-lg-4'>
+              <label class='control-label'>Handling: </label><textarea rows='12' cols='50' class='form-control' name='plot'/></textarea>
+              <label class='control-label'>Huvudbild: </label><input class='btn btn-default' type='file' name='image' id='uploadfile'>
+              <label class='control-label'>Sido bild: </label><input class='btn btn-default' type='file' name='image1' id='uploadfile'>
+              <label class='control-label'>Header bild: </label><input class='btn btn-default' type='file' name='image2' id='uploadfile'>
+              
+            </div>
+            <div class='col-xs-12 col-sm-12 col-md-6 col-lg-4'>
+            {$checkBoxes}
+                <div class='row-spacing'></div><input class='btn btn-primary' type='submit' name='create' value='Lägg till'/>
+            </div>
+            </fieldset>
+        </form>"; 
 
+        return $output; 
+    }
+    public function GetEditForm($id, $output) {
+  
+        $movie = $this->getMovieById($id); 
+//        $this->sanitizeVariables($content); 
+        $checkBoxes = $this->getMovieGenreById($id); 
+       
+        $html = "<form method=post>
+        <fieldset>
+        <div class='col-xs-12 col-sm-12 col-md-6 col-lg-4'>
+              <label class='control-label'>Titel: </label><input class='form-control' type='text'     value='{$movie->title}' name='title'/>
+              <label class='control-label'>Regissör: </label><input class='form-control' type='text'  value='{$movie->director}' name='director'/>
+              <label class='control-label'>Längd i minuter: </label><input class='form-control' type='number' value='{$movie->length}'   name='length'/>
+              <label class='control-label'>Årtal: </label><input class='form-control' type='number'   value='{$movie->year}' name='year'/>
+              <label class='control-label'>Subs: </label><input class='form-control' type='text'      value='{$movie->subtext}' name='subtext'/>
+              <label class='control-label'>Språk: </label><input class='form-control' type='text'     value='{$movie->speech}' name='speech'/>
+              <label class='control-label'>Pris: </label><input class='form-control' type='number'    value='{$movie->price}' name='price'/>
+              <label class='control-label'>Youtube: </label><input class='form-control' type='url'    value='{$movie->youtubelink}' name='youtubelink'/>
+              <label class='control-label'>IMDB: </label><input class='form-control' type='url'       value='{$movie->imdblink}' name='imdblink'/>      
+           </div>
+           <div class='col-xs-12 col-sm-12 col-md-6 col-lg-4'>
+              <label class='control-label'>Handling: </label><textarea rows='12' cols='50' class='form-control' name='plot'/>{$movie->plot}</textarea>      
+            </div>
+            <div class='col-xs-12 col-sm-12 col-md-6 col-lg-4'>
+            {$checkBoxes}
+                <div class='row-spacing'></div><input class='btn btn-primary' type='submit' name='update' value='Uppdatera'/>
+                $output
+            </div>
+        </fieldset>
+        </form>";
+        return $html; 
+    }
+     public function GetRemoveForm($id, $output) {
+        $content = $this->getMovieById($id); 
+        
+        $html = "<form method=post>
+            <fieldset>
+            <input type='hidden' name='id' value='{$id}'/>
+            <label class='control-label'>Vill du verkligen ta bort inlägget med titeln: {$content->title}</label><br>
+            <div class='btn-group' role='group' aria-label='remove'><input class='btn btn-warning' type='submit' name='remove' value='Ja'/>
+            <input class='btn btn-default' type='submit' name='noRemove' value='Nej'/></div>
+            <output>{$output}</output>
+            </fieldset>
+            </form>"; 
+        return $html; 
+    }
+    
     public function GetAllGenres($isHome) {
         // Get all genres that are active
-        $sql = '
-		  SELECT DISTINCT G.name
-		  FROM Genre AS G
-		    INNER JOIN Movie2Genre AS M2G
-		      ON G.id = M2G.idGenre
+        $sql = 'SELECT DISTINCT G.name
+            FROM Genre AS G
+            INNER JOIN Movie2Genre AS M2G
+            ON G.id = M2G.idGenre
 		';
         $res = $this->db->ExecuteSelectQueryAndFetchAll($sql);
-
+       
         $this->allGenres .= "<div class='btn-group' role='group' aria-label='...'>"; 
+         if(!$isHome) {
+            $this->allGenres .= "<a id='allButton' class='btn btn-default' >all</a>";
+        }
         foreach ($res as $val) {
             if ($val->name == $this->genre) {
                 $this->allGenres .= "<a class='btn btn-default active'>$val->name</a>";
@@ -91,7 +182,10 @@ class CMovies {
                     $this->allGenres .= "<a class='btn btn-default' href='movies.php" . $this->getQueryString(array('genre' => $val->name)) . "'>{$val->name}</a> ";
                 } else {
                     $this->allGenres .= "<a class='btn btn-default' href='" . $this->getQueryString(array('genre' => $val->name)) . "'>{$val->name}</a> ";
+//                    $url = "movies.php?genre={$val->name}";
+//                    $this->allGenres .= "<a class='btn btn-default genre-btn' id='{$val->name}' data-url='{$url}'> {$val->name}</a> ";
                 }
+            
             }
         }
         $this->allGenres .= "</div>"; 
@@ -176,12 +270,52 @@ class CMovies {
         return $res;
     }
 
+    public function getAllMovies() {
+        $sql = 'SELECT * FROM Movie'; 
+        $res =  $this->db->ExecuteSelectQueryAndFetchAll($sql);
+        
+        $html = ""; 
+        foreach($res as $movie) {
+            $html .= "<p><li>{$movie->title} <a class='btn btn-primary' href='movie_edit.php?id={$movie->id}'>editera</a>"
+            . " <a class='btn btn-default' href='movie_remove.php?id={$movie->id}'>ta bort</a></li></p>";
+        }
+        return $html;
+    }
+    
     public function getMovieById($id) {
 
         $sql = "SELECT * FROM Movie WHERE id=?";
         $res = $this->db->ExecuteSelectQueryAndFetchAll($sql, array($id));
 
         return $res[0];
+    }
+    
+    public function getMovieGenreById($id) {
+        $sql = 'SELECT * FROM movie2genre
+                WHERE idMovie = ?';
+        $checkedBoxes = $this->db->ExecuteSelectQueryAndFetchAll($sql, array($id));
+      
+        $sql = 'SELECT * FROM Genre'; 
+        $allGenres = $this->db->ExecuteSelectQueryAndFetchAll($sql);
+        $checkBoxes = "<label class='control-label'>Genre: </label>"; 
+        $found; 
+        foreach($allGenres as $genre) {
+            $found = false;
+            foreach($checkedBoxes as $checkedBoxId) {
+                if($genre->id == $checkedBoxId->idGenre) { 
+                    $found = true;
+                }
+            }
+            if($found) {
+                  $checkBoxes .= "<div class='checkbox'>
+                        <label><input name='genres[]' type='checkbox' value='{$genre->id}' checked>{$genre->name}</label>
+                       </div>";
+            } else {
+                $checkBoxes .= "<div class='checkbox'>
+                <label><input name='genres[]' type='checkbox' value='{$genre->id}'>{$genre->name}</label></div>";
+            }
+        }
+        return $checkBoxes; 
     }
 
     private function getHtmlTable() {
@@ -221,14 +355,14 @@ class CMovies {
             $imgPath = IMG_PATH . $val->image;
             $item = "<img src='img.php?src={$imgPath}&amp;width=400&amp;height=260&amp;crop-to-fit'/>";
 
-            $container .= "<div class='col-sm-6 col-md-4'>"
+            $container .= "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-4'>"
                     . "<a href='?id={$val->id}' title='{$val->title}'>"
                     . "<div class='thumbnail text-center'>"
                     . "{$item}"
                     . "<div class='caption'>{$val->title}"
                     . " ({$val->year})</a>"
-                    . " <br><label for='price'><h4>Pris: </h4></label> {$val->price} kr"
-                    . "<p><a href='#' class='btn btn-primary' role='button'>Youtube</a> <a href='#' class='btn btn-default' role='button'>IMDB</a></p>"
+                    . " <br><label for='price'><h4>Pris: </h4></label> {$val->price} kr<br>"
+                    . " {$this->getMovieModal($val->id, $val->title, $val->youtubelink)}<a href='{$val->imdblink}' class='btn btn-default' role='button'>IMDB</a>"
                     . "</div></div></div>";
         }
         $container .= "</div></div>";
@@ -338,14 +472,14 @@ class CMovies {
 			  <div class='pages'>{$navigatePage}</div>
 			</div>";
     }
-    public function getMovieModal($title, $youtubeURL) {
+    public function getMovieModal($modalId, $title, $youtubeURL) {
         $modal = "<!-- Button trigger modal -->
-        <button type='button' class='btn btn-primary' data-toggle='modal' data-target='#myModal'>
+        <button type='button' class='btn btn-primary' data-toggle='modal' data-target='#{$modalId}'>
           Se Trailer
         </button>
 
         <!-- Modal -->
-        <div class='modal fade' id='myModal' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
+        <div class='modal fade' id='{$modalId}' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
           <div class='modal-dialog modal-lg'>
             <div class='modal-content'>
               <div class='modal-header'>
@@ -363,28 +497,33 @@ class CMovies {
         </div>"; 
         return $modal; 
     }
-    public function RenderSingleMovie($id) {
-        $movie = $this->getMovieById($id);
-        $imgPath = IMG_PATH . $movie->image;
-        $modal = $this->getMovieModal($movie->title, "//www.youtube.com/embed/s7EdQ4FqbhY"); 
-        $html = "<div class='well'>
+    public function RenderSingleMovie($movie) {
+        $imgPaths = array(IMG_PATH . $movie->image, IMG_PATH . $movie->image1);
+        
+        $modal = $this->getMovieModal($movie->id,$movie->title, $movie->youtubelink); 
+        $html = "
         <article>
         <div class='row'>
-        <div class='col-xs-6 col-md-3'>
-          <a href='img.php?src={$imgPath}' class='thumbnail'>
-          <img src='img.php?src={$imgPath}'>
-          </a>
-        </div>
-        <div class='col-xs-6 col-md-3'>
-          <a href='img.php?src={$imgPath}' class='thumbnail'>
-          <img src='img.php?src={$imgPath}'>
-          </a>
-        </div>
+            <div class='media'>
+              <div class='media-left'>
+              <div class='col-xs-6 col-sm-3 col-md-3'>
+                <a href='img.php?src={$imgPaths[0]}' class='thumbnail'>
+                  <img src='img.php?src={$imgPaths[0]}'>
+                </a>
+              </div>
+              </div>
+              <div class='media-body'>
+              <div class='col-xs-12 col-sm-8 col-md-8'>
+                <h4 class='media-heading'>Handling</h4>
+                {$movie->plot}
+                    </div>
+              </div>
+            </div>
         </div>
 
-        <div class='plot'> {$movie->plot} </div>
+   
             {$modal}
-        </article></div>";
+        </article>";
 
         return $html;
     }
@@ -392,19 +531,37 @@ class CMovies {
     public function RenderSingleMovieAside($id) {
         $movie = $this->getMovieById($id);
 
-        $imgPath = IMG_PATH . $movie->asideImg;
-        $html = "<div class='singlemovie'>";
-        $html .= "<article>";
-        $html .= "<img src='img.php?src={$imgPath}&amp;width=200&amp;height=260&amp;crop-to-fit'/>";
-        $html .= "<div><h3>Regissör: </h3> {$movie->director} </div>";
-        $html .= "<div><h3>Title: </h3>{$movie->title} </div>";
-        $html .= "<div><h3>Year: </h3>{$movie->length} min</div>";
-        $html .= "<div><h3>Year: </h3>{$movie->year} </div>";
-        $html .= "<div><h3>Text: </h3>{$movie->subtext}</div>";
-        $html .= "<div><h3>Pris: </h3>{$movie->price} </div>";
-
-        $html .= "</article></div>";
-
+        $imgPath = IMG_PATH . $movie->image1;
+        $html = "<div class='singlemovie'>
+         <article>
+            <img width='100%' src='img.php?src={$imgPath}&amp;width=400&amp;height=260&amp;crop-to-fit'/>
+             <div class='list-group'>
+                <a class='list-group-item'>     
+                 <h4 class='list-group-item-heading'>Title</h4>
+                 <p class='list-group-item-text'>{$movie->title}</p>
+                </a>
+                <a class='list-group-item'>     
+                 <h4 class='list-group-item-heading'>Regissör</h4>
+                 <p class='list-group-item-text'>{$movie->director}</p>
+                </a>
+                <a class='list-group-item'>     
+                 <h4 class='list-group-item-heading'>Längd</h4>
+                 <p class='list-group-item-text'>{$movie->length}</p>
+                </a>
+                <a class='list-group-item'>     
+                 <h4 class='list-group-item-heading'>År</h4>
+                 <p class='list-group-item-text'>{$movie->year}</p>
+                </a>
+                <a class='list-group-item'>     
+                 <h4 class='list-group-item-heading'>Text</h4>
+                 <p class='list-group-item-text'>{$movie->subtext}</p>
+                </a>
+                <a class='list-group-item'>     
+                 <h4 class='list-group-item-heading'>Pris</h4>
+                 <p class='list-group-item-text'>{$movie->price}</p>
+                </a>
+             </div>
+          </article></div>";
         return $html;
     }
 
@@ -419,7 +576,7 @@ class CMovies {
 
         $sqlDebug = $this->db->Dump();
 
-        return "
+        return "<div id='movieSection'>
         <div class='row'><form>
         <fieldset>
             <input type=hidden name=genre value='{$this->genre}'/>
@@ -430,48 +587,84 @@ class CMovies {
         </div>
         <br>
         <div class='well well-sm'><div class='row'>
-            <div class='col-md-6'>
-                Vi hittade {$this->rows} filmer. {$hitsPerPage} 
+            <div class='col-sm-5 col-md-5 col-lg-6'>
+                {$hitsPerPage}
             </div>
-            <div class='col-md-6'>
+            <div class='col-sm-7 col-md-7 col-lg-6'>
                 <div class='pull-right'>
                     Sortera på Titel: {$this->orderby('title')} År: {$this->orderby('year')} Pris: {$this->orderby('price')}
                 </div>
             </div>
         </div></div>
+        <div class='alert alert-success' role='alert'> Vi hittade {$this->rows} filmer.</div>
             {$gallery} 
         <nav class='text-center'>
         <ul class='pagination pagination-md'>
           {$navigatePage}
         </ul>
-      </nav>";
+      </nav></div>";
     }
-
+    public function GetAdminToolbar() {
+            return '<div class="row"><div class="col-xs-12 col-sm-3 col-md-3"><div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="moviesDropdown" data-toggle="dropdown" aria-expanded="true">
+              Filmer
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="moviesDropdown">
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="movie_create.php">Lägg till film</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="movie_view.php">Editera film</a></li>
+            </ul>
+          </div></div><div class="col-xs-12 col-sm-3 col-md-3">
+          <div class="dropdown">
+            <button class="btn btn-info dropdown-toggle" type="button" id="newsDropdown" data-toggle="dropdown" aria-expanded="true">
+              Nyheter
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="newsDropdown">
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="news_create.php">Lägg till nyhet</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="news_view.php">Editera nyhet</a></li>
+            </ul>
+          </div></div>
+              <div class="col-xs-12 col-sm-3 col-md-3">
+                  <div class="row"> <form method=post>
+              <p><input type="submit" class="btn btn-primary" name="logout" value="Logga ut"/></p>
+              </form></div>
+             </div>';
+    }
+    
     public function RenderThreeLAtest() {
 
-        $sql = "SELECT * FROM movie WHERE published <= NOW() ORDER BY IFNULL(updated,published) DESC LIMIT 3; ";
+        $sql = "SELECT * FROM Movie WHERE published <= NOW() ORDER BY IFNULL(updated,published) DESC LIMIT 3; ";
         $res = $this->db->ExecuteSelectQueryAndFetchAll($sql);
   
         $container = "<div class='row'>";
         foreach ($res as $val) {
-            $imgPath = IMG_PATH . $val->asideImg;
-            $modal = $this->getMovieModal($val->title, "//www.youtube.com/embed/s7EdQ4FqbhY"); 
+            $imgPath = IMG_PATH . $val->image2;
+            $modal = $this->getMovieModal($val->id, $val->title, $val->youtubelink); 
             $container .= "<div class='col-sm-6 col-md-4'>";
             $container .= "<div class='thumbnail text-center'>";
-            $container .= "<img src='img.php?src={$imgPath}&amp;width=400&amp;height=260&amp;crop-to-fit'>";
-            $container .= " <div class='caption'>";
-            $container .= "<h3><a href='movies.php?id={$val->id}'>{$val->title}</a></h3>";
-            $container .= "{$modal}<a href='#' class='btn btn-default' role='button'>IMDB</a>";
+            $container .= "<a href='movies.php?id={$val->id}'><img src='img.php?src={$imgPath}&amp;width=400&amp;height=260&amp;crop-to-fit'>";
+            $container .= "<div class='caption'>";
+            $container .= "<h3>{$val->title}</h3></a>";
+            $container .= "{$modal}<a href='{$val->imdblink}' class='btn btn-default' target='_blank' role='button'>IMDB</a>";
             $container .= " </div></div></div>";
         }
         $container .= "</div>";
-        return $container;
+        return $res;
     }
 
     public function insertContent($fileUpload) {
          $output = null;
         isset($this->acronym) or die('Check: You must login to edit.');
         if ($this->create) {
+                 
+            $this->image  =   basename($_FILES['image']['name']);
+            $this->image1  =  basename($_FILES['image1']['name']);
+            $this->image2  =  basename($_FILES['image2']['name']);
+                                  
+                $output .= $fileUpload->uploadFile($this->target_dir,'image');
+                $output .= $fileUpload->uploadFile($this->target_dir,'image1');
+                $output .= $fileUpload->uploadFile($this->target_dir,'image2');
               $sql = 'INSERT INTO Movie(
                 title, 
                 director, 
@@ -480,9 +673,9 @@ class CMovies {
                 plot, 
                 image, 
                 image1, 
+                image2,
                 subtext, 
-                speech, 
-                asideImg, 
+                speech,  
                 price, 
                 youtubelink, 
                 imdblink, 
@@ -499,27 +692,123 @@ class CMovies {
                 $this->year, 
                 $this->plot, 
                 $this->image, 
-                $this->image1, 
+                $this->image1,
+                $this->image2, 
                 $this->subtext, 
                 $this->speech,
-                $this->asideImg, 
                 $this->price, 
                 $this->youtubelink,
                 $this->imdblink);
             $res = $this->db->ExecuteQuery($sql, $params);
+            
             if ($res) {
-                          
-                $fileUpload->uploadFile('image');
-                $fileUpload->uploadFile('image1');
-                $fileUpload->uploadFile('asideImg');
-//                header('Location: admin.php');
+                $movie_id = $this->db->LastInsertId();
+                if (isset($_POST['genres'])) {
+                    $sql = 'INSERT INTO movie2genre(
+                            idMovie,
+                            idGenre)
+                            VALUES (?, ?)';
+
+                    foreach($_POST['genres'] as $key => $value) {
+                        $params = array($movie_id, $value);
+                        $res = $this->db->ExecuteQuery($sql, $params); 
+                    }  
+                }
             } else {
-                $output = 'Informationen EJ tillagd.<br><pre>' . print_r($this->db->Dump(), 1) . '</pre>';
+                $output = '<div class="alert alert-danger" role="alert">Informationen EJ tillagd.<br><pre>' . print_r($this->db->Dump(), 1) . '</pre></div>';
             }
         }
 
         return $output; 
     }
+    
+    public function updateContent($id) {
+        $movie = $this->getMovieById($id);
+        $output = null;
+        if ($this->update) {
+            $sql = '
+                UPDATE Movie SET
+                    title = ?, 
+                    director = ?, 
+                    length = ?, 
+                    year = ?, 
+                    plot = ?, 
+                    subtext = ?, 
+                    speech = ?,  
+                    price = ?, 
+                    youtubelink = ?, 
+                    imdblink = ?, 
+                    updated = NOW() 
+                WHERE 
+                  id = ?;
+              ';
+            $params = array(
+                $this->title, 
+                $this->director, 
+                $this->length, 
+                $this->year, 
+                $this->plot, 
+                $this->subtext, 
+                $this->speech,
+                $this->price, 
+                $this->youtubelink,
+                $this->imdblink,
+                $id);
+            $res = $this->db->ExecuteQuery($sql, $params);
+            echo $res[0]; 
+            if ($res) {
+                $output = '<div class="row-spacing"></div><div class="alert alert-success" role="alert">Informationen sparades.</div>';
+
+                if (isset($_POST['genres'])) {
+                    
+                    $sql = 'INSERT INTO movie2genre(
+                            idMovie,
+                            idGenre)
+                            VALUES (?, ?)';
+
+                    foreach($_POST['genres'] as $key => $value) {
+                        $params = array($id, $value);
+                        $res = $this->db->ExecuteQuery($sql, $params); 
+                    }  
+                }
+                
+            } else {
+                $output = '<div class="alert alert-danger" role="alert">Informationen sparades EJ.<br><pre>' . print_r($this->db->Dump(), 1) . '</pre></div>';
+            }
+        }
+        return $output; 
+    }
+    
+    public function deleteContent($id) {
+        $output = null;
+        if ($this->remove) {
+            $sql = 'DELETE FROM movie2genre
+                  WHERE idMovie = ?';
+            $res = $this->db->ExecuteQuery($sql, array($id));
+            echo $res[0]; 
+            if ($res) {
+                
+                $sql = "DELETE FROM Movie WHERE id = ?;";
+                $res = $this->db->ExecuteQuery($sql, array($id));
+
+                if($res){
+                    header("Location: movie_view.php");
+                }else{
+                    $output = '<div class="alert alert-danger" role="alert">Filmen raderades EJ.<br><pre>' . print_r($this->db->Dump(), 1) . '</pre></div>';
+                } 
+               
+                
+            } else {
+                $output = '<div class="alert alert-danger" role="alert">Filmen raderades EJ.<br><pre>' . print_r($this->db->Dump(), 1) . '</pre></div>';
+            }
+        } else if($this->noRemove) {
+            header("Location: movie_view.php");
+        }
+        
+        return $output; 
+    }
+    
+    
     /**
      * Display error message.
      *

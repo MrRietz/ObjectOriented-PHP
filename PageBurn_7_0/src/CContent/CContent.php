@@ -10,8 +10,8 @@ class CContent {
     protected $url        = null; 
     protected $data       = null; 
     protected $type       = null; 
+    protected $genre      = null; 
     protected $filter     = null; 
-    protected $published  = null; 
 
     protected $save       = null; 
     protected $remove     = null; 
@@ -25,10 +25,10 @@ class CContent {
         $this->title =      isset($_POST['title']) ? $_POST['title'] : null;
         $this->slug =       isset($_POST['slug']) ? $this->slugify($_POST['slug']) : null;
         $this->url =        isset($_POST['url']) ? strip_tags($_POST['url']) : null;
+        $this->genre =        isset($_POST['genre']) ? strip_tags($_POST['genre']) : null;
         $this->data =       isset($_POST['data']) ? $_POST['data'] : array();
         $this->type =       "post";//isset($_POST['type']) ? strip_tags($_POST['type']) : array();
         $this->filter =     isset($_POST['filter']) ? $_POST['filter'] : array();
-        $this->published =  isset($_POST['published']) ? strip_tags($_POST['published']) : array();
         $this->save =       isset($_POST['save']) ? true : false;
         $this->remove =     isset($_POST['remove']) ? true : false; 
         $this->noRemove =     isset($_POST['noRemove']) ? true : false; 
@@ -44,14 +44,13 @@ class CContent {
         $items = null;
         if ($this->isAdmin) {
             foreach ($res AS $key => $val) {
-                $items .= "<li>{$val->type} (" 
+                $items .= "<p><li>{$val->type} (" 
                 .(!$val->available ? 'inte ' : null) . "publicerad): " 
                         . htmlentities($val->title, null, 'UTF-8') 
-                        . " (<a href='removeController.php?id={$val->id}'>ta bort</a> <a href='editController.php?id={$val->id}'>editera</a> <a href='" 
-                        . $this->getUrlToContent($val) . "'>visa</a>)</li>\n";
+                        . "  <a class='btn btn-info' href='news_edit.php?id={$val->id}'>editera</a> <a class='btn btn-warning' href='news_remove.php?id={$val->id}'>ta bort</a>"
+                        . " <a class='btn btn-success' href='" . $this->getUrlToContent($val) . "'>visa</a></li></p>";
             }
-        }
-        else {
+        } else {
             foreach ($res AS $key => $val) {
                 $items .= "<li>{$val->type} (" 
                 . (!$val->available ? 'inte ' : null) . "publicerad): " 
@@ -69,23 +68,22 @@ class CContent {
             $sql = '
                 UPDATE Content SET
                   title   = ?,
+                  genre   = ?,
                   slug    = ?,
                   url     = ?,
                   data    = ?,
-                  type    = ?,
                   filter  = ?,
-                  published = ?,
                   updated = NOW()
                 WHERE 
                   id = ?;
               ';
-            $url = empty($url) ? null : $url;
-            $params = array($this->title, $this->slug, $this->url, $this->data, $this->type, $this->filter, $this->published, $this->id);
+            $this->url = empty($this->url) ? null : $this->url;
+            $params = array($this->title, $this->genre, $this->slug, $this->url, $this->data, $this->filter, $this->id);
             $res = $this->db->ExecuteQuery($sql, $params);
             if ($res) {
-                $output = 'Informationen sparades.';
+                $output = '<div class="alert alert-success" role="alert">Informationen sparades.</div>';
             } else {
-                $output = 'Informationen sparades EJ.<br><pre>' . print_r($db->Dump(), 1) . '</pre>';
+                $output = '<div class="alert alert-danger" role="alert">Informationen sparades EJ.</div><br><pre>' . print_r($this->db->Dump(), 1) . '</pre>';
             }
         }
         else if($this->remove) {
@@ -102,20 +100,27 @@ class CContent {
         if ($this->save) {
             $sql = 'INSERT INTO Content(
                 title, 
+                genre,
                 slug, 
                 url, 
                 data, 
-                type, 
                 filter, 
+                type,
                 published, 
-                updated) 
-                VALUES(?, ?, ?, ?, ?, ?, NOW(), NOW())'; 
+                created) 
+                VALUES(
+                ?, 
+                ?,
+                ?, 
+                ?, 
+                ?, 
+                ?, "post", NOW(), NOW())'; 
             
-            $url = empty($url) ? null : $url;
-            $params = array($this->title, $this->slug, $this->url, $this->data, $this->type, $this->filter);
+            $this->url = empty($this->url) ? null : $this->url;
+            $params = array($this->title, $this->genre, $this->slug, $this->url, $this->data, $this->filter);
             $res = $this->db->ExecuteQuery($sql, $params);
             if ($res) {
-                header('Location: viewController.php');
+                header('Location: news_view.php');
             } else {
                 $output = 'Informationen EJ tillagd.<br><pre>' . print_r($this->db->Dump(), 1) . '</pre>';
             }
@@ -131,17 +136,14 @@ class CContent {
         $html = null; 
         $html .= "<form method=post>";
         $html .= "<fieldset>";
-        $html .= "<legend>Uppdatera innehåll</legend>";
         $html .= "<input type='hidden' name='id' value='{$this->id}'/>";
-        $html .= "<p><label>Titel:<br/><input type='text' name='title' value='{$this->title}'/></label></p>";
-        $html .= "<p><label>Slug:<br/><input type='text' name='slug' value='{$this->slug}'/></label></p>";
-        $html .= "<p><label>Url:<br/><input type='text' name='url' value='{$this->url}'/></label></p>";
-        $html .= "<p><label>Text:<br/><textarea name='data'>{$this->data}</textarea></label></p>";
-        $html .= "<p><label>Type:<br/><input type='text' name='type' value='{$this->type}'/></label></p>";
-        $html .= "<p><label>Filter:<br/><input type='text' name='filter' value='{$this->filter}'/></label></p>";
-        $html .= "<p><label>Publiseringsdatum:<br/><input type='text' name='published' value='{$this->published}'/></label></p>";
-        $html .= "<p class=buttons><input type='submit' name='save' value='Spara'/></p>";
-        $html .= "<p><a href='viewController.php'>Visa alla</a></p>";
+        $html .= "<label class='control-label'>Titel:<br/><input class='form-control' type='text' name='title' value='{$this->title}'/></label></p>";
+        $html .= "<label class='control-label'>Genre:<br/><input class='form-control' type='text' name='genre' value='{$this->genre}'/></label></p>";
+        $html .= "<label class='control-label'>Slug:<br/><input class='form-control' type='text' name='slug' value='{$this->slug}'/></label></p>";
+        $html .= "<label class='control-label'>Url:<br/><input class='form-control' type='text' name='url' value='{$this->url}'/></label></p>";
+        $html .= "<label class='control-label'>Text:<br/><textarea rows='12' cols='50' class='form-control' name='data'>{$this->data}</textarea></label></p>";
+        $html .= "<label class='control-label'>Filter:<br/><input class='form-control' type='text' name='filter' value='{$this->filter}'/></label></p>";
+        $html .= "<input class='btn btn-primary' class='form-control' type='submit' name='save' value='Spara'/>";
         $html .= "<output>{$output}</output>";
         $html .= "</fieldset>";
         $html .= "</form>";
@@ -152,14 +154,13 @@ class CContent {
         $html = null;
         $html .= "<form method=post>";
         $html .= "<fieldset>";
-        $html .= "<legend>Lägg till nytt innehåll</legend>";
         $html .= "<input type='hidden' name='id' value='{$this->id}'/>";
-        $html .= "<p><label>Titel:<br/><input type='text' name='title' value=''/></label></p>";
-        $html .= "<p><label>Slug:<br/><input type='text' name='slug' value=''/></label></p>";
-        $html .= "<p><label>Text:<br/><textarea name='data' height='200' width='300'></textarea></label></p>";
-        $html .= "<p><label>Filter:<br/><input type='text' name='filter' value='nl2br'/></label></p>";
-        $html .= "<p class=buttons><input type='submit' name='save' value='Spara'/></p>";
-        $html .= "<p><a href='viewController.php'>Visa alla</a></p>";
+        $html .= "<label class='control-label'>Titel:<br/><input class='form-control' type='text' name='title' value=''/></label></p>";
+        $html .= "<label class='control-label'>Genre:<br/><input class='form-control' type='text' name='genre' value=''/></label></p>";
+        $html .= "<label class='control-label'>Slug:<br/><input class='form-control' type='text' name='slug' value=''/></label></p>";
+        $html .= "<label class='control-label'>Text:<br/><textarea class='form-control' name='data' rows='12' cols='50'></textarea></label></p>";
+        $html .= "<label class='control-label'>Filter:<br/><input class='form-control' type='text' name='filter' value='nl2br'/></label></p>";
+        $html .= "<p><input class='btn btn-primary' type='submit' name='save' value='Lägg till'/></p>";
         $html .= "<output>{$output}</output>";
         $html .= "</fieldset>";
         $html .= "</form>";
@@ -178,7 +179,7 @@ class CContent {
         $html .= "Vill du verkligen ta bort inlägget med titeln: {$this->title}</label></p>";
         $html .= "<p class=buttons><input type='submit' name='remove' value='Ja'/>";
         $html .= " <input type='submit' name='noRemove' value='Nej'/></p>";
-        $html .= "<p><a href='viewController.php'>Visa alla</a></p>";
+        $html .= "<p><a href='news_view.php'>Visa alla</a></p>";
         $html .= "<output>{$output}</output>";
         $html .= "</fieldset>";
         $html .= "</form>";
@@ -203,6 +204,7 @@ class CContent {
         $this->slug       = htmlentities($c->slug, null, 'UTF-8');
         $this->url        = htmlentities($c->url, null, 'UTF-8');
         $this->data       = htmlentities($c->data, null, 'UTF-8');
+        $this->genre      = htmlentities($c->genre, null, 'UTF-8');
         $this->type       = htmlentities($c->type, null, 'UTF-8');
         $this->filter     = htmlentities($c->filter, null, 'UTF-8');
         $this->published  = htmlentities($c->published, null, 'UTF-8');
@@ -244,7 +246,33 @@ class CContent {
                 break;
         }
     }
-    
+    public function GetAdminToolbar() {
+              return '<div class="row"><div class="col-xs-12 col-sm-3 col-md-3"><div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="moviesDropdown" data-toggle="dropdown" aria-expanded="true">
+              Filmer
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="moviesDropdown">
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="movie_create.php">Lägg till film</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="movie_view.php">Editera film</a></li>
+            </ul>
+          </div></div><div class="col-xs-12 col-sm-3 col-md-3">
+          <div class="dropdown">
+            <button class="btn btn-info dropdown-toggle" type="button" id="newsDropdown" data-toggle="dropdown" aria-expanded="true">
+              Nyheter
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="newsDropdown">
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="news_create.php">Lägg till nyhet</a></li>
+              <li role="presentation"><a role="menuitem" tabindex="-1" href="news_view.php">Editera nyhet</a></li>
+            </ul>
+          </div></div>
+              <div class="col-xs-12 col-sm-3 col-md-3">
+                  <div class="row"> <form method=post>
+              <p><input type="submit" class="btn btn-primary" name="logout" value="Logga ut"/></p>
+              </form></div>
+             </div>';
+    }
    /**
    * Create a slug of a string, to be used as url.
     *

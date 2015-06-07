@@ -8,8 +8,6 @@ include(__DIR__.'/config.php');
 
 
 // Define what to include to make the plugin to work
-$pageburn['stylesheets'][]        = 'css/slideshow.css';
-$pageburn['stylesheets'][] = 'css/gallery.css'; 
 //$pageburn['jquery']               = true;
 
 
@@ -30,11 +28,12 @@ if (isset($res[0])) {
     
     foreach ($res as $content) {
         $blog->sanitizeVariables($content);
-        $pageburn['sidebar'] .=  $blog->renderHTML($content);
+        $pageburn['sidebar'] .=  $blog->renderHTML($content, true);
     }
 }
 
-
+$latestMovies = $movies->RenderThreeLatest(); 
+$imgPaths = array(IMG_PATH . $latestMovies[0]->image1, IMG_PATH . $latestMovies[1]->image1, IMG_PATH . $latestMovies[2]->image1); 
 $pageburn['main'] = <<<EOD
 <article>
 <h2>Välkommen till RM Rental Movies</h2>
@@ -42,31 +41,87 @@ $pageburn['main'] = <<<EOD
 <p>Du har hittat hit, vilken tur du har. Här på RM Rental Movies slipper du både långa nedladdningstider och att streama film.
     Bara på några klick så kommer en film blixtsnabbt ner i din brevlåda. Vi har ett stort utbud på hela 10 filmer och här ska du nog kunna finna vad du vill se.
  Vi har hittat en gammal antikhandlare som sålde ut sina DVD så inom en snar framtid har vi några filmer till. </p>
-        
-<div id="slideshow" class='slideshow' data-host="" data-path="img/me/" data-images='["me_1.jpg", "me_2.jpg", "me_3.jpg","me_2.jpg"]'>
-<img src='img/me/me_1.jpg' width='100%' height='200px' alt='Me'/>
+ 
+   <h3>Våra senaste filmer</h3>
+
+<div id='carousel' class='carousel slide' data-ride='carousel'>
+          <!-- Indicators -->
+          <ol class='carousel-indicators'>
+            <li data-target='#carousel' data-slide-to='0' class='active'></li>
+            <li data-target='#carousel' data-slide-to='1'></li>
+            <li data-target='#carousel' data-slide-to='2'></li>
+          </ol>
+
+          <!-- Wrapper for slides -->
+          <div class='carousel-inner' role='listbox'>
+            <div class='item active'>
+             <a href='movies.php?id={$latestMovies[0]->id}'>
+              <img src='img.php?src={$imgPaths[0]}'/>
+              <div class='carousel-caption'>
+                <h3>{$latestMovies[0]->title}</h3></a>
+                <a href='{$latestMovies[0]->imdblink}' class='btn btn-default' target='_blank' role='button'>IMDB</a>
+              </div>
+               
+            </div>
+            <div class='item'>
+             <a href='movies.php?id={$latestMovies[1]->id}'>
+              <img src='img.php?src={$imgPaths[0]}'/>
+              <div class='carousel-caption'>
+                <h3>{$latestMovies[1]->title}</h3></a>
+                <a href='{$latestMovies[1]->imdblink}' class='btn btn-default' target='_blank' role='button'>IMDB</a>
+              </div>
+            </div>
+            <div class='item'>
+             <a href='movies.php?id={$latestMovies[2]->id}'>
+              <img src='img.php?src={$imgPaths[0]}'/>
+              <div class='carousel-caption'>
+                <h3>{$latestMovies[2]->title}</h3></a>
+                <a href='{$latestMovies[2]->imdblink}' class='btn btn-default' target='_blank' role='button'>IMDB</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <a class='left carousel-control' href='#carousel' role='button' data-slide='prev'>
+            <span class='glyphicon glyphicon-chevron-left' aria-hidden='true'></span>
+            <span class='sr-only'>Previous</span>
+          </a>
+          <a class='right carousel-control' href='#carousel' role='button' data-slide='next'>
+            <span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>
+            <span class='sr-only'>Next</span>
+          </a>
 </div>
         
 <div class='genres'>
 <h3>Tillgängliga genrer</h3>
 {$allGenres}
 </div>
-<h3>Populäraste film</h3> 
-<div class="row">
+<div class='row'>
   <div class="col-sm-6 col-md-6">
+<h3>Populäraste film</h3> 
+
+
     <div class="thumbnail">
-      <img src="#" alt="...">
-      <div class="caption">
-        <h3>Thumbnail label</h3>
-        <p>...</p>
-        <p><a href="#" class="btn btn-primary" role="button">Youtube</a> <a href="#" class="btn btn-default" role="button">IMDB</a></p>
+      <img src="img.php?src=../img/movies/hobbit.jpg">
+      <div class="caption text-center">
+        <h3>The Hobbit: The Desolation of Smaug</h3>
+        {$movies->getMovieModal('hobbit','The Hobbit: The Desolation of Smaug','https://www.youtube.com/embed/OPVWy1tFXuc')} <a href="http://www.imdb.com/title/tt1170358/?ref_=nv_sr_2" class="btn btn-default" role="button">IMDB</a>
       </div>
     </div>
-  </div>
-</div>
-<h3>Våra senaste filmer</h3>
-{$movies->RenderThreeLatest()}
 
+</div>
+  <div class="col-sm-6 col-md-6">
+<h3>Senast hyrda film</h3> 
+    <div class="thumbnail">
+      <img src="img.php?src=../img/movies/godfather.jpg">
+      <div class="caption text-center">
+        <h3>The Godfather</h3>
+        {$movies->getMovieModal('godfather','The Godfather','https://www.youtube.com/embed/sY1S34973zA')} <a href="http://www.imdb.com/title/tt0068646/" class="btn btn-default" role="button">IMDB</a>
+      </div>
+    </div>
+
+</div>
+</div>
 
 </article>
 EOD;

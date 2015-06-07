@@ -4,11 +4,9 @@ class CFileUpload {
     
     public function __construct() {
     }
-    public function uploadFile($file) {
+    public function uploadFile($target_dir , $file) {
         $outputMsg = ""; 
-        $target_dir = "img/movies/";
         $target_file = $target_dir . basename($_FILES[$file]['name']);
-        echo "Target File:" . $target_file;
         $uploadOk = 1;
         $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
         // Check if image file is a actual image or fake image

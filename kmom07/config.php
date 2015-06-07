@@ -41,7 +41,7 @@ $pageburn['title_append'] = ' | RM Rental Movies';
 
 $pageburn['header'] = null;
 
-$pageburn['sidebarTitle'] = "<h2>News</h2>";
+$pageburn['sidebarTitle'] = "";
 $pageburn['sidebar'] = <<<EOD
 EOD;
 
@@ -99,7 +99,7 @@ $pageburn['navbar'] = array(
         'hem' => array('text' => 'HEM', 'url' => 'home.php', 'title' => 'Min presentation om mig själv'),
         'filmer' => array('text' => 'FILMER', 'url' => 'movies.php', 'title' => 'Gallery'),
         'nyheter' => array('text' => 'NYHETER', 'url' => 'news.php', 'title' => 'Vy som visar innehållet'),
-        'om' => array('text' => 'OM', 'url' => '#.php', 'title' => 'Om'),
+        'om' => array('text' => 'OM', 'url' => 'about.php', 'title' => 'Om'),
     ),
     'callback' => function($url) {
         if (basename($_SERVER['SCRIPT_FILENAME']) == $url) {
@@ -121,7 +121,7 @@ $pageburn['favicon'] = 'favicon.ico';
 $pageburn['modernizr'] = 'js/modernizr.js';
 //$pageburn['jquery']     = null; // To disable jQuery
 $pageburn['jquery'] = 'https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js';
-$pageburn['javascript_include'] = array('js/pageburn.js', 'js/slideshow.js');
+$pageburn['javascript_include'] = array('js/pageburn.js');
 /**
  * Google analytics.
  */

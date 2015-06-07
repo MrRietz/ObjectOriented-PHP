@@ -89,7 +89,7 @@ class CDatabase
 	   */
 	  public function LastInsertId() 
 	  {
-	  	  return $this->db->lastInsertid();
+              return $this->db->lastInsertid();
 	  }
 	   /**
 	   * Return rows affected of last INSERT, UPDATE, DELETE

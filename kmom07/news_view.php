@@ -10,16 +10,29 @@ include(__DIR__ . '/config.php');
 
 $db = new CDatabase($pageburn['database']);
 $content = new CContent($db); 
+$user = new CUser($db); 
+
+if (isset($_POST['logout'])) {
+    $user->Logout();
+    header('Location: admin.php');
+}
+if(!$user->IsAuthenticated()) {
+    die('Check: You must login to edit.');
+}
+$pageburn['sidebarTitle'] = "Tools";
+$pageburn['sidebar'] = <<<EOD
+    {$content->GetAdminToolbar()}
+EOD;
 
 // Do it and store it all in variables in the Anax container.
-$pageburn['title'] = "Lägg till nytt innehåll";
+$pageburn['title'] = "Editera nyheter";
 
 $pageburn['main'] = <<<EOD
-<h1>{$pageburn['title']}</h1>
-
+<label><h4>Inlägg:</h4> </label> 
 <ul>
-{$content->renderInsertForm($content->insertContent())}
+{$content->renderAvailableContent()}
 </ul>
+
 
 
 EOD;

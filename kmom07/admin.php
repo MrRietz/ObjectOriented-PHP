@@ -5,12 +5,9 @@
  
 // Include the essential config-file which also creates the $anax variable with its defaults.
 include(__DIR__.'/config.php'); 
-
-$pageburn['javascript_include'] = array('js/message.js');
-$user = new CUser(new CDatabase($pageburn['database'])); 
-
-
-
+$db = new CDatabase($pageburn['database']); 
+$user = new CUser($db); 
+$movies = new CMovies($db);
 if (isset($_POST['login'])) {
 
     $user->Login($_POST['acronym'], $_POST['password']);
@@ -35,73 +32,33 @@ if($user->IsAuthenticated())
 {
     $pageburn['title'] = "Admin";
     $pageburn['main'] = <<<EOD
-    <h1>{$pageburn['title']}</h1>
-    
     <fieldset>
-        <output><p> {$output} </p></output>      
-        <form method=post>
-        <p><input type='submit' name='logout' value='Logga ut'/></p>
-        </form>
+        <div class="alert alert-success" role="alert">{$output} </div>       
     </fieldset>
 
 EOD;
         /** The sidebar
      * ********************************************************************** */
-    $pageburn['sidebarTitle'] = "<h2>Admin</h2>";
-    $pageburn['sidenav'] = array(
-        'class' => 'sidebarNav',
-        'items' => array(
-            //this is a menu item
-            'addmovie' => array(
-                'text' => 'Lägg till film',
-                'url' => 'movie_create.php',
-                'title' => 'Alla filmer'),
-            'editmovie' => array(
-                'text' => 'Editera film',
-                'url' => 'movie_search_title.php',
-                'title' => 'Movie title'
-            ),
-            'deletemovie' => array(
-                'text' => 'Ta bort film',
-                'url' => 'movie_search_by_year.php',
-                'title' => 'Year'
-            ),
-            'addnews' => array(
-                'text' => 'Lägg till nyhet',
-                'url' => 'movie_search_genre.php',
-                'title' => 'Genre'
-            ),
-            'editnews' => array(
-                'text' => 'Lägg till nyhet',
-                'url' => 'movie_search_genre.php',
-                'title' => 'Genre'
-            ),
-            'removenews' => array(
-                'text' => 'Lägg till nyhet',
-                'url' => 'movie_search_genre.php',
-                'title' => 'Genre'
-            ),
-        ),
-    'callback' => function($url) {
-        if (basename($_SERVER['SCRIPT_FILENAME']) == $url) {
-            return true;
-        }
-        }
-    );
+$pageburn['sidebarTitle'] = "Tools";
+$pageburn['sidebar'] = <<<EOD
+ {$movies->GetAdminToolbar()}
+EOD;
+
 } else
 {
-    
+    $pageburn['sidebarTitle'] = "Tools";
+$pageburn['sidebar'] = <<<EOD
+          <div class="alert alert-info" role="alert"> {$output} </div>
+EOD;
     // Do it and store it all in variables in the Anax container.
     $pageburn['title'] = "Logga in";
     $pageburn['main'] = <<<EOD
-    <h1>{$pageburn['title']}</h1>
     <form method=post>
     <fieldset>
-            <p><em><div id='message'>Du kan logga in med burnie:burnie eller admin:admin.<div></em></p>
-            <p><label>Användare:<br/><input type='text' name='acronym' value=''/></label></p>
-            <p><label>Lösenord:<br/><input type='text' name='password' value=''/></label></p>
-            <output><p> {$output} </p></output>     
-            <p><input type='submit' id='login' name='login' value='Login'/></p>
+            <p><div class="alert alert-info" role="alert">Du kan logga in med burnie:burnie eller admin:admin.</div></p>
+            <p><label>Användare:<br/><input class='form-control' type='text' name='acronym' value=''/></label></p>
+            <p><label>Lösenord:<br/><input class='form-control' type='text' name='password' value=''/></label></p>
+            <p><input class='btn btn-primary' type='submit' id='login' name='login' value='Login'/></p>
     </fieldset>
     </form>
 

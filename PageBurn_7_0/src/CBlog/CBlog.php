@@ -25,7 +25,7 @@ class CBlog extends CContent {
         $sql = "SELECT * FROM Content
             WHERE type = 'post' 
             AND published <= NOW()
-            ORDER BY updated DESC";
+            ORDER BY created DESC";
 
         $res = $this->db->ExecuteSelectQueryAndFetchAll($sql, array($this->slug));
         $html = "";

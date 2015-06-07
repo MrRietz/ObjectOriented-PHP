@@ -26,8 +26,8 @@ class CFileUpload {
             $uploadOk = 0;
         }
         // Check file size
-        if ($_FILES[$file]["size"] > 500000) {
-            $outputMsg = "<div class='alert alert-danger' role='alert'>Sorry, your file is too large.</div>";
+        if ($_FILES[$file]["size"] > (2 * 500000)) {
+            $outputMsg = "<div class='alert alert-danger' role='alert'>Sorry, your file is too large. Max size of file is 1MB.</div>";
             $uploadOk = 0;
         }
         // Allow certain file formats
@@ -38,15 +38,16 @@ class CFileUpload {
         }
         // Check if $uploadOk is set to 0 by an error
         if ($uploadOk == 0) {
-            $outputMsg = "<div class='alert alert-danger' role='alert'>Sorry, your file was not uploaded.</div>";
+            return array($outputMsg, false); 
         // if everything is ok, try to upload file
         } else {
             if (move_uploaded_file($_FILES[$file]["tmp_name"], $target_file)) {
                 $outputMsg = "<div class='alert alert-success' role='alert'>The file ". basename( $_FILES[$file]["name"]). " has been uploaded.</div>";
+                return array($outputMsg, true); 
             } else {
-                $outputMsg = "<div class='alert alert-danger' role='alert'>Sorry, there was an error uploading your file.</div>";
+                return array($outputMsg, false);
             }
         }
-        return $outputMsg; 
+
     }
 }

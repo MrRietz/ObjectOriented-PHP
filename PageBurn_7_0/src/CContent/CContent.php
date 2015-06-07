@@ -90,7 +90,7 @@ class CContent {
             $this->deleteContentById($this->id);
         }
         else if($this->noRemove) {
-                 header('Location: viewController.php');
+                 header('Location: news_view.php');
         }
         return $output; 
     }
@@ -174,16 +174,15 @@ class CContent {
         $html = null; 
         $html .= "<form method=post>";
         $html .= "<fieldset>";
-        $html .= "<legend>Ta bort innehåll</legend>";
-        $html .= "<input type='hidden' name='id' value='{$this->id}'/>";
-        $html .= "Vill du verkligen ta bort inlägget med titeln: {$this->title}</label></p>";
-        $html .= "<p class=buttons><input type='submit' name='remove' value='Ja'/>";
-        $html .= " <input type='submit' name='noRemove' value='Nej'/></p>";
-        $html .= "<p><a href='news_view.php'>Visa alla</a></p>";
+        $html .= "<input type='hidden' name='id' value='{$content->id}'/>";
+        $html .= "<p>Vill du verkligen ta bort inlägget med titeln: {$content->title}</p>";
+        $html .= "<div class='btn-group' role='group' aria-label='remove'><input class='btn btn-warning' type='submit' name='remove' value='Ja'/>
+            <input class='btn btn-default' type='submit' name='noRemove' value='Nej'/></div>";
         $html .= "<output>{$output}</output>";
         $html .= "</fieldset>";
         $html .= "</form>";
         return $html; 
+
     }
 
     public function resetDB() {
@@ -229,7 +228,7 @@ class CContent {
         $res = $this->db->ExecuteQuery($sql, array($id));
         
         if($res){
-            header("Location: viewController.php");
+            header("Location: news_view.php");
         }else{
             $output = "Informationen raderades EJ.<br><pre>" .print_r($this->db->Dump(), 1) ."</pre>";
         } 
@@ -247,7 +246,7 @@ class CContent {
         }
     }
     public function GetAdminToolbar() {
-              return '<div class="row"><div class="col-xs-12 col-sm-3 col-md-3"><div class="dropdown">
+             return '<div class="row"><div class="col-xs-12 col-sm-3 col-md-3"><div class="dropdown">
             <button class="btn btn-primary dropdown-toggle" type="button" id="moviesDropdown" data-toggle="dropdown" aria-expanded="true">
               Filmer
               <span class="caret"></span>
@@ -268,9 +267,9 @@ class CContent {
             </ul>
           </div></div>
               <div class="col-xs-12 col-sm-3 col-md-3">
-                  <div class="row"> <form method=post>
+               <form method=post>
               <p><input type="submit" class="btn btn-primary" name="logout" value="Logga ut"/></p>
-              </form></div>
+              </form>
              </div>';
     }
    /**

@@ -55,7 +55,7 @@ EOD;
     $pageburn['main'] = <<<EOD
     <form method=post>
     <fieldset>
-            <p><div class="alert alert-info" role="alert">Du kan logga in med burnie:burnie eller admin:admin.</div></p>
+            <p><div class="alert alert-info" role="alert">Välkommen till adminpanelen logga in här för att administrera.</div></p>
             <p><label>Användare:<br/><input class='form-control' type='text' name='acronym' value=''/></label></p>
             <p><label>Lösenord:<br/><input class='form-control' type='text' name='password' value=''/></label></p>
             <p><input class='btn btn-primary' type='submit' id='login' name='login' value='Login'/></p>

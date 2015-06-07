@@ -6126,3 +6126,6 @@ h2,
 .carousel-caption {
   text-decoration: none;
 }
+.carousel-caption a {
+  color: #ffffff;
+}

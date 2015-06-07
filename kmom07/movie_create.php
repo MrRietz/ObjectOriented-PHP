@@ -16,7 +16,7 @@ if (isset($_POST['logout'])) {
     $user->Logout();
     header('Location: admin.php');
 }
-$movies->insertContent($fileUpload); 
+$output = $movies->insertContent($fileUpload); 
 
 // Do it and store it all in variables in the Anax container.
 $pageburn['title'] = "Skapa ny film";
@@ -29,7 +29,8 @@ EOD;
 $pageburn['main'] = <<<EOD
 
 {$movies->GetInsertForm()}
-
+<br>
+{$output}
 EOD;
 
 

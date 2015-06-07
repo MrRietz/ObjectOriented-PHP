@@ -88,7 +88,8 @@ class CMovies {
         }
         $output = "<form method=post enctype='multipart/form-data'>
           <fieldset>
-            <div class='col-xs-12 col-sm-12 col-md-6 col-lg-4'>
+          <div class='row'>
+            <div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>
               <label class='control-label'>Titel: </label><input class='form-control' type='text'     name='title'/>
               <label class='control-label'>Regissör: </label><input class='form-control' type='text'  name='director'/>
               <label class='control-label'>Längd i minuter: </label><input class='form-control' type='number'   name='length'/>
@@ -99,16 +100,17 @@ class CMovies {
               <label class='control-label'>Youtube: </label><input class='form-control' type='url'    name='youtubelink'/>
               <label class='control-label'>IMDB: </label><input class='form-control' type='url'       name='imdblink'/>      
            </div>
-           <div class='col-xs-12 col-sm-12 col-md-6 col-lg-4'>
+           <div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>
               <label class='control-label'>Handling: </label><textarea rows='12' cols='50' class='form-control' name='plot'/></textarea>
-              <label class='control-label'>Huvudbild: </label><input class='btn btn-default' type='file' name='image' id='uploadfile'>
-              <label class='control-label'>Sido bild: </label><input class='btn btn-default' type='file' name='image1' id='uploadfile'>
-              <label class='control-label'>Header bild: </label><input class='btn btn-default' type='file' name='image2' id='uploadfile'>
+              <label class='control-label'>Huvudbild: </label><input  type='file' name='image' id='uploadfile'>
+              <label class='control-label'>Sido bild: </label><input  type='file' name='image1' id='uploadfile'>
+              <label class='control-label'>Header bild: </label><input  type='file' name='image2' id='uploadfile'>
               
             </div>
-            <div class='col-xs-12 col-sm-12 col-md-6 col-lg-4'>
+            <div class='col-xs-12 col-sm-12 col-md-4 col-lg-4'>
             {$checkBoxes}
                 <div class='row-spacing'></div><input class='btn btn-primary' type='submit' name='create' value='Lägg till'/>
+            </div>
             </div>
             </fieldset>
         </form>"; 
@@ -135,7 +137,10 @@ class CMovies {
               <label class='control-label'>IMDB: </label><input class='form-control' type='url'       value='{$movie->imdblink}' name='imdblink'/>      
            </div>
            <div class='col-xs-12 col-sm-12 col-md-6 col-lg-4'>
-              <label class='control-label'>Handling: </label><textarea rows='12' cols='50' class='form-control' name='plot'/>{$movie->plot}</textarea>      
+              <label class='control-label'>Handling: </label><textarea rows='12' cols='50' class='form-control' name='plot'/>{$movie->plot}</textarea>   
+              <label class='control-label'>Huvudbild: </label><input class='form-control' type='text' name='image' value='{$movie->image}' id='uploadfile'>
+              <label class='control-label'>Sido bild: </label><input  class='form-control' type='text' name='image1' value='{$movie->image1}' id='uploadfile'>
+              <label class='control-label'>Header bild: </label><input  class='form-control' type='text' name='image2' value='{$movie->image2}' id='uploadfile'>
             </div>
             <div class='col-xs-12 col-sm-12 col-md-6 col-lg-4'>
             {$checkBoxes}
@@ -152,7 +157,7 @@ class CMovies {
         $html = "<form method=post>
             <fieldset>
             <input type='hidden' name='id' value='{$id}'/>
-            <label class='control-label'>Vill du verkligen ta bort inlägget med titeln: {$content->title}</label><br>
+            <p>Vill du verkligen ta bort inlägget med titeln: {$content->title}</p>
             <div class='btn-group' role='group' aria-label='remove'><input class='btn btn-warning' type='submit' name='remove' value='Ja'/>
             <input class='btn btn-default' type='submit' name='noRemove' value='Nej'/></div>
             <output>{$output}</output>
@@ -181,7 +186,7 @@ class CMovies {
                 if($isHome) {
                     $this->allGenres .= "<a class='btn btn-default' href='movies.php" . $this->getQueryString(array('genre' => $val->name)) . "'>{$val->name}</a> ";
                 } else {
-                    $this->allGenres .= "<a class='btn btn-default' href='" . $this->getQueryString(array('genre' => $val->name)) . "'>{$val->name}</a> ";
+                    $this->allGenres .= "<a class='btn btn-default' href='" . $this->getQueryString(array('page' => 1,'genre' => $val->name)) . "'>{$val->name}</a> ";
 //                    $url = "movies.php?genre={$val->name}";
 //                    $this->allGenres .= "<a class='btn btn-default genre-btn' id='{$val->name}' data-url='{$url}'> {$val->name}</a> ";
                 }
@@ -291,7 +296,7 @@ class CMovies {
     }
     
     public function getMovieGenreById($id) {
-        $sql = 'SELECT * FROM movie2genre
+        $sql = 'SELECT * FROM Movie2Genre
                 WHERE idMovie = ?';
         $checkedBoxes = $this->db->ExecuteSelectQueryAndFetchAll($sql, array($id));
       
@@ -352,7 +357,7 @@ class CMovies {
         $container = "<div class='well'><div class='row'>";
         foreach ($res as $val) {
 
-            $imgPath = IMG_PATH . $val->image;
+            $imgPath = IMG_PATH . $val->image1;
             $item = "<img src='img.php?src={$imgPath}&amp;width=400&amp;height=260&amp;crop-to-fit'/>";
 
             $container .= "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-4'>"
@@ -498,7 +503,7 @@ class CMovies {
         return $modal; 
     }
     public function RenderSingleMovie($movie) {
-        $imgPaths = array(IMG_PATH . $movie->image, IMG_PATH . $movie->image1);
+        $imgPaths = array(IMG_PATH . $movie->image);
         
         $modal = $this->getMovieModal($movie->id,$movie->title, $movie->youtubelink); 
         $html = "
@@ -520,11 +525,9 @@ class CMovies {
               </div>
             </div>
         </div>
-
-   
-            {$modal}
+            {$modal}<a href='{$movie->imdblink}' target='_blank' class='btn btn-default' role='button'>IMDB</a>
         </article>";
-
+            
         return $html;
     }
 
@@ -546,11 +549,15 @@ class CMovies {
                 </a>
                 <a class='list-group-item'>     
                  <h4 class='list-group-item-heading'>Längd</h4>
-                 <p class='list-group-item-text'>{$movie->length}</p>
+                 <p class='list-group-item-text'>{$movie->length} min</p>
                 </a>
                 <a class='list-group-item'>     
                  <h4 class='list-group-item-heading'>År</h4>
                  <p class='list-group-item-text'>{$movie->year}</p>
+                </a>
+                <a class='list-group-item'>     
+                 <h4 class='list-group-item-heading'>Språk</h4>
+                 <p class='list-group-item-text'>{$movie->speech}</p>
                 </a>
                 <a class='list-group-item'>     
                  <h4 class='list-group-item-heading'>Text</h4>
@@ -558,7 +565,7 @@ class CMovies {
                 </a>
                 <a class='list-group-item'>     
                  <h4 class='list-group-item-heading'>Pris</h4>
-                 <p class='list-group-item-text'>{$movie->price}</p>
+                 <p class='list-group-item-text'>{$movie->price} kr</p>
                 </a>
              </div>
           </article></div>";
@@ -626,9 +633,9 @@ class CMovies {
             </ul>
           </div></div>
               <div class="col-xs-12 col-sm-3 col-md-3">
-                  <div class="row"> <form method=post>
+               <form method=post>
               <p><input type="submit" class="btn btn-primary" name="logout" value="Logga ut"/></p>
-              </form></div>
+              </form>
              </div>';
     }
     
@@ -636,25 +643,12 @@ class CMovies {
 
         $sql = "SELECT * FROM Movie WHERE published <= NOW() ORDER BY IFNULL(updated,published) DESC LIMIT 3; ";
         $res = $this->db->ExecuteSelectQueryAndFetchAll($sql);
-  
-        $container = "<div class='row'>";
-        foreach ($res as $val) {
-            $imgPath = IMG_PATH . $val->image2;
-            $modal = $this->getMovieModal($val->id, $val->title, $val->youtubelink); 
-            $container .= "<div class='col-sm-6 col-md-4'>";
-            $container .= "<div class='thumbnail text-center'>";
-            $container .= "<a href='movies.php?id={$val->id}'><img src='img.php?src={$imgPath}&amp;width=400&amp;height=260&amp;crop-to-fit'>";
-            $container .= "<div class='caption'>";
-            $container .= "<h3>{$val->title}</h3></a>";
-            $container .= "{$modal}<a href='{$val->imdblink}' class='btn btn-default' target='_blank' role='button'>IMDB</a>";
-            $container .= " </div></div></div>";
-        }
-        $container .= "</div>";
         return $res;
     }
 
     public function insertContent($fileUpload) {
          $output = null;
+         $res = null; 
         isset($this->acronym) or die('Check: You must login to edit.');
         if ($this->create) {
                  
@@ -662,49 +656,55 @@ class CMovies {
             $this->image1  =  basename($_FILES['image1']['name']);
             $this->image2  =  basename($_FILES['image2']['name']);
                                   
-                $output .= $fileUpload->uploadFile($this->target_dir,'image');
-                $output .= $fileUpload->uploadFile($this->target_dir,'image1');
-                $output .= $fileUpload->uploadFile($this->target_dir,'image2');
-              $sql = 'INSERT INTO Movie(
-                title, 
-                director, 
-                length, 
-                year, 
-                plot, 
-                image, 
-                image1, 
-                image2,
-                subtext, 
-                speech,  
-                price, 
-                youtubelink, 
-                imdblink, 
-                published, 
-                created,
-                updated) 
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(), NOW(), NOW())';
-            
-            $url = empty($url) ? null : $url;
-            $params = array(
-                $this->title, 
-                $this->director, 
-                $this->length, 
-                $this->year, 
-                $this->plot, 
-                $this->image, 
-                $this->image1,
-                $this->image2, 
-                $this->subtext, 
-                $this->speech,
-                $this->price, 
-                $this->youtubelink,
-                $this->imdblink);
-            $res = $this->db->ExecuteQuery($sql, $params);
-            
+                $file1 = $fileUpload->uploadFile($this->target_dir,'image');
+                $file2 = $fileUpload->uploadFile($this->target_dir,'image1');
+                $file3 = $fileUpload->uploadFile($this->target_dir,'image2');
+            if($file1[1] && $file2[1] && $file3[1]) {
+                $sql = 'INSERT INTO Movie(
+                  title, 
+                  director, 
+                  length, 
+                  year, 
+                  plot, 
+                  image, 
+                  image1, 
+                  image2,
+                  subtext, 
+                  speech,  
+                  price, 
+                  youtubelink, 
+                  imdblink, 
+                  published, 
+                  created,
+                  updated) 
+                  VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(), NOW(), NOW())';
+
+              $url = empty($url) ? null : $url;
+              $params = array(
+                  $this->title, 
+                  $this->director, 
+                  $this->length, 
+                  $this->year, 
+                  $this->plot, 
+                  $this->image, 
+                  $this->image1,
+                  $this->image2, 
+                  $this->subtext, 
+                  $this->speech,
+                  $this->price, 
+                  $this->youtubelink,
+                  $this->imdblink);
+              $res = $this->db->ExecuteQuery($sql, $params);
+            } else {
+                $output .= $file1[0];
+                $output .= $file2[0];
+                $output .= $file3[0];
+            }
+       
             if ($res) {
                 $movie_id = $this->db->LastInsertId();
                 if (isset($_POST['genres'])) {
-                    $sql = 'INSERT INTO movie2genre(
+                    $sql = 'INSERT INTO Movie2Genre(
                             idMovie,
                             idGenre)
                             VALUES (?, ?)';
@@ -712,10 +712,11 @@ class CMovies {
                     foreach($_POST['genres'] as $key => $value) {
                         $params = array($movie_id, $value);
                         $res = $this->db->ExecuteQuery($sql, $params); 
-                    }  
+                    }
+                    $output = '<div class="alert alert-success" role="alert">Film uppdaterad.</div>';
                 }
             } else {
-                $output = '<div class="alert alert-danger" role="alert">Informationen EJ tillagd.<br><pre>' . print_r($this->db->Dump(), 1) . '</pre></div>';
+                $output .= '<div class="alert alert-danger" role="alert">Filmen EJ tillagd.<br><pre>' . print_r($this->db->Dump(), 1) . '</pre></div>';
             }
         }
 
@@ -725,6 +726,12 @@ class CMovies {
     public function updateContent($id) {
         $movie = $this->getMovieById($id);
         $output = null;
+        
+        $this->image =     isset($_POST['image']) ? strip_tags($_POST['image']) : null;
+        $this->image1 =      isset($_POST['image1']) ? strip_tags($_POST['image1']) : null;
+        $this->image2 =       isset($_POST['image2']) ? strip_tags($_POST['image2']) : null;
+        
+        
         if ($this->update) {
             $sql = '
                 UPDATE Movie SET
@@ -733,6 +740,9 @@ class CMovies {
                     length = ?, 
                     year = ?, 
                     plot = ?, 
+                    image = ?, 
+                    image1 = ?,
+                    image2 = ?, 
                     subtext = ?, 
                     speech = ?,  
                     price = ?, 
@@ -748,6 +758,9 @@ class CMovies {
                 $this->length, 
                 $this->year, 
                 $this->plot, 
+                $this->image, 
+                $this->image1,
+                $this->image2, 
                 $this->subtext, 
                 $this->speech,
                 $this->price, 
@@ -757,11 +770,11 @@ class CMovies {
             $res = $this->db->ExecuteQuery($sql, $params);
             echo $res[0]; 
             if ($res) {
-                $output = '<div class="row-spacing"></div><div class="alert alert-success" role="alert">Informationen sparades.</div>';
+                
 
                 if (isset($_POST['genres'])) {
-                    
-                    $sql = 'INSERT INTO movie2genre(
+                    $output = '<div class="row-spacing"></div><div class="alert alert-success" role="alert">Informationen sparades.</div>';
+                    $sql = 'INSERT INTO Movie2Genre(
                             idMovie,
                             idGenre)
                             VALUES (?, ?)';
@@ -771,9 +784,9 @@ class CMovies {
                         $res = $this->db->ExecuteQuery($sql, $params); 
                     }  
                 }
-                
+                  $output = '<div class="alert alert-success" role="alert">Film uppdaterad.</div>';
             } else {
-                $output = '<div class="alert alert-danger" role="alert">Informationen sparades EJ.<br><pre>' . print_r($this->db->Dump(), 1) . '</pre></div>';
+                $output = '<div class="alert alert-danger" role="alert">Filmen uppdaterades EJ.<br><pre>' . print_r($this->db->Dump(), 1) . '</pre></div>';
             }
         }
         return $output; 
@@ -782,7 +795,7 @@ class CMovies {
     public function deleteContent($id) {
         $output = null;
         if ($this->remove) {
-            $sql = 'DELETE FROM movie2genre
+            $sql = 'DELETE FROM Movie2Genre
                   WHERE idMovie = ?';
             $res = $this->db->ExecuteQuery($sql, array($id));
             echo $res[0]; 
@@ -818,5 +831,4 @@ class CMovies {
         header("Status: 404 Not Found");
         die('gallery.php says 404 - ' . htmlentities($message));
     }
-
 }

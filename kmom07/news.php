@@ -15,7 +15,7 @@ $pageburn['sidebar'] = <<<EOD
     {$blog->getGenreList()}
 EOD;
 
-$pageburn['title'] = "Nyheter - Alla";
+$pageburn['title'] = "Nyheter";
 $pageburn['debug'] = $db->Dump();
  
 $pageburn['main'] = null;
